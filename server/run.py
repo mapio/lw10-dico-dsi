@@ -8,6 +8,25 @@ from webbrowser import open_new
 from wsgiref.simple_server import make_server
 from wsgiref.util import request_uri
 
+from exif import process_file
+
+def extract_lat_lon( filename ):
+	def rat2float( vals ):
+		return [ float( _.num ) / float( _.den ) for _ in vals ]
+	fp = open( filename, 'rb' )
+	tags = process_file( fp )
+	fp.close()
+	try:
+		lat_ref = tags[ 'GPS GPSLatitudeRef' ].values
+		lat_rat = rat2float( tags[ 'GPS GPSLatitude' ].values )
+		lon_ref = tags[ 'GPS GPSLongitudeRef' ].values
+		lon_rat = rat2float( tags[ 'GPS GPSLongitude' ].values )
+	except KeyError:
+		return None
+	lat = ( lat_rat[ 0 ] + lat_rat[ 1 ] / 60 + lat_rat[ 2 ] / 3600 ) * ( 1 if lat_ref == "N" else -1 )
+	lon = ( lon_rat[ 0 ] + lon_rat[ 1 ] / 60 + lon_rat[ 2 ] / 3600 ) * ( -1 if lon_ref == "W" else 1 )
+	return (lat, lon)
+
 def http_response( start_response, status = 200, content_type = 'text/plain; charset=utf-8', data = '' ):
 	HTTP_CODES = {
 		200: 'OK',
@@ -45,7 +64,7 @@ def handle_img( start_response, basename ):
 		return http_response( start_response, 401, data = "You do not have permission to access this file: " + filename )
 	return http_response( start_response, 200, content_type = 'image/jpeg', data = open( filename, 'rb' ) )
 
-upload_body = """
+upload = """
 <form method="post" enctype="multipart/form-data">
 <input type="hidden" name="stage" value="upload">
 <input type="file" name="file_field">
@@ -55,7 +74,7 @@ upload_body = """
 
 add_metadata = Template( """
 <img height="400" width="400" src="/img/$name">
-<img src="http://maps.google.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&sensor=false">
+<img src="http://maps.google.com/maps/api/staticmap?center=$lat,$lon&zoom=15&size=400x400&sensor=false&markers=color:blue|$lat,$lon">
 <form method="post" enctype="multipart/form-data">
 <input type="hidden" name="stage" value="metadata">
 <input type="hidden" name="name" value="$name">
@@ -65,19 +84,27 @@ add_metadata = Template( """
 """ )
 
 confirm ="""
+<p>Immagine aggiunta.
 """
 
 def handle_app( start_response, environ ):
 	if environ[ 'REQUEST_METHOD' ] == 'POST':
 		fs = FieldStorage( fp = environ[ 'wsgi.input' ], environ = environ, keep_blank_values = 1 )
-		if fs[ 'stage' ].value == 'upload':
+		stage = fs[ 'stage' ].value
+		if stage  == 'upload':
 			form_file = fs[ 'file_field' ]
-			dest = open( path.join( 'img', '001' + '.jpg' ), 'wb' )
+			dest_filename = path.join( 'img', '001' + '.jpg' )
+			dest = open( dest_filename, 'wb' )
 			copyfileobj( form_file.file, dest )
 			dest.close()
-			return html_response( start_response, "Add metadata", add_metadata.substitute( name = "001" ) )
+			ll = extract_lat_lon( dest_filename )
+			if ll: lat, lon = ll
+			else: lat, lon = 0, 0
+			return html_response( start_response, "Aggiungi metadati", add_metadata.substitute( name = "001", lat = lat, lon = lon ) )
+		elif stage == 'metadata':
+			return html_response( start_response, "Conferma", confirm )
 	else:
-		return html_response( start_response, "Upload", upload_body )
+		return html_response( start_response, "Upload", upload )
 	return http_response( start_response, 400 )
 
 def application( environ, start_response ):
