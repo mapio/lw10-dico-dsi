@@ -50,6 +50,7 @@ class Kml( object ):
 		placemark.setAttributeNS( NAMESPACES[ 'xml' ].uri, '{0}:{1}'.format( NAMESPACES[ 'xml' ].prefix, 'id' ), id )
 		self.doc.documentElement.appendChild( placemark )
 		self.len += 1
+		return id
 
 	def __element( self, tagName, namespace = 'kml', text = None, child = None ):
 		element = self.doc.createElementNS( NAMESPACES[ namespace ].uri, '{0}:{1}'.format( NAMESPACES[ namespace ].prefix, tagName ) if NAMESPACES[ namespace ].prefix else tagName )
