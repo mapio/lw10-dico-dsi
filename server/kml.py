@@ -1,3 +1,4 @@
+from os import path, access, R_OK
 import xml.dom.minidom
 
 from collections import namedtuple
@@ -14,16 +15,16 @@ NAMESPACES = {
 
 class Kml( object ):
 
-	def __init__( self, path = None ):
-		if path:
-			f = open( path, 'r' )
+	def __init__( self, filename ):
+		self.filename = filename
+		self.placemarks = {}
+		if path.exists( filename ):
+			f = open( filename, 'r' )
 			self.doc = xml.dom.minidom.parse( f )
 			f.close()
-			self.placemarks = {}
 			for placemark in self.doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' ):
 				id = placemark.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
 				self.placemarks[ int( id.split( ':' )[ 1 ] ) ] = placemark
-			self.len = len( self.placemarks )
 		else:
 			self.doc = xml.dom.minidom.Document()
 			root = self.doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
@@ -32,8 +33,7 @@ class Kml( object ):
 			root.setAttribute( 'xmlns:' + NAMESPACES[ 'dc' ].prefix, NAMESPACES[ 'dc' ].uri )
 			root.setAttribute( 'xmlns:' + NAMESPACES[ 'xml' ].prefix, NAMESPACES[ 'xml' ].uri )
 			self.doc.appendChild( root )
-			self.placemarks = {}
-			self.len = 0
+		self.len = len( self.placemarks )
 	
 	def __repr__( self ):
 		return self.doc.toprettyxml( encoding = 'utf-8' )
@@ -58,8 +58,8 @@ class Kml( object ):
 		if child: element.appendChild( child )
 		return element
 
-	def write( self, path ):
-		f = open( path, 'w' )
+	def write( self ):
+		f = open( self.filename, 'w' )
 		self.doc.writexml( f, encoding = 'utf-8' )
 		f.close()
 	

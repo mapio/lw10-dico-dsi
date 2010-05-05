@@ -9,6 +9,8 @@ from wsgiref.simple_server import make_server
 from wsgiref.util import request_uri
 
 from exif import process_file
+from kml import Kml, Point
+
 
 def extract_lat_lon( filename ):
 	def rat2float( vals ):
@@ -23,9 +25,10 @@ def extract_lat_lon( filename ):
 		lon_rat = rat2float( tags[ 'GPS GPSLongitude' ].values )
 	except KeyError:
 		return None
-	lat = ( lat_rat[ 0 ] + lat_rat[ 1 ] / 60 + lat_rat[ 2 ] / 3600 ) * ( 1 if lat_ref == "N" else -1 )
-	lon = ( lon_rat[ 0 ] + lon_rat[ 1 ] / 60 + lon_rat[ 2 ] / 3600 ) * ( -1 if lon_ref == "W" else 1 )
-	return (lat, lon)
+	return Point(
+		( lat_rat[ 0 ] + lat_rat[ 1 ] / 60 + lat_rat[ 2 ] / 3600 ) * ( 1 if lat_ref == "N" else -1 ),
+		( lon_rat[ 0 ] + lon_rat[ 1 ] / 60 + lon_rat[ 2 ] / 3600 ) * ( -1 if lon_ref == "W" else 1 )
+	)
 
 def http_response( start_response, status = 200, content_type = 'text/plain; charset=utf-8', data = '' ):
 	HTTP_CODES = {
@@ -56,8 +59,8 @@ $body
 """ )
 	return http_response( start_response, 200, content_type = 'text/html', data = base_page.substitute( title = title, body = body ) )
 
-def handle_img( start_response, basename ):
-	filename = path.join( 'img', basename + '.jpg' )
+def handle_img( start_response, num ):
+	filename = path.join( 'img', '{0:03d}.jpg'.format( num ) )
 	if not path.exists( filename ) or not path.isfile( filename ):
 		return http_response( start_response, 404, data = "File does not exist: " + filename )
 	if not access( filename, R_OK ):
@@ -73,11 +76,11 @@ upload = """
 """
 
 add_metadata = Template( """
-<img height="400" width="400" src="/img/$name">
+<img height="400" width="400" src="/img/$num">
 <img src="http://maps.google.com/maps/api/staticmap?center=$lat,$lon&zoom=15&size=400x400&sensor=false&markers=color:blue|$lat,$lon">
 <form method="post" enctype="multipart/form-data">
 <input type="hidden" name="stage" value="metadata">
-<input type="hidden" name="name" value="$name">
+<input type="hidden" name="num" value="$num">
 <label for="metadata_field">Metadata: </label> <input type="text" name="metadata_field">
 <input type="submit" value="Annota" name="submit_field">
 </form>
@@ -92,15 +95,17 @@ def handle_app( start_response, environ ):
 		fs = FieldStorage( fp = environ[ 'wsgi.input' ], environ = environ, keep_blank_values = 1 )
 		stage = fs[ 'stage' ].value
 		if stage  == 'upload':
+			data = Kml( 'data.xml' )
 			form_file = fs[ 'file_field' ]
-			dest_filename = path.join( 'img', '001' + '.jpg' )
+			dest_filename = path.join( 'img', '{0:03d}.jpg'.format( len( data ) ) )
 			dest = open( dest_filename, 'wb' )
 			copyfileobj( form_file.file, dest )
 			dest.close()
-			ll = extract_lat_lon( dest_filename )
-			if ll: lat, lon = ll
-			else: lat, lon = 0, 0
-			return html_response( start_response, "Aggiungi metadati", add_metadata.substitute( name = "001", lat = lat, lon = lon ) )
+			point = extract_lat_lon( dest_filename )
+			data.append( data.placemark( point ) )
+			data.write()
+			if not point: point = Point( 0, 0 )
+			return html_response( start_response, "Aggiungi metadati", add_metadata.substitute( num = len( data ) - 1, lat = point.lat, lon = point.lon ) )
 		elif stage == 'metadata':
 			return html_response( start_response, "Conferma", confirm )
 	else:
@@ -110,7 +115,7 @@ def handle_app( start_response, environ ):
 def application( environ, start_response ):
 	path = request_uri( environ ).split( '/' )[ 3 : ]
 	if path[ 0 ] == 'img':
-		return handle_img( start_response, path[ 1 ] )
+		return handle_img( start_response, int( path[ 1 ] ) )
 	elif path[ 0 ] == 'app':
 		return handle_app( start_response, environ )
 	else:
