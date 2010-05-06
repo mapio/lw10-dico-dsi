@@ -35,9 +35,8 @@ class Handler( object ):
 class ImgHandler( Handler ):
 
 	def __call__( self ):
-		num = int( self.context.request_uri_parts[ 0 ] )
-		filename = path.join( 'img', '{0:03d}.jpg'.format( num ) )
-		return self.context.static( filename )
+		img = self.context.request_uri_parts[ 0 ]
+		return self.context.static( path.join( 'img', 'metadata.kml' if img == 'metadata' else '{0:03d}.jpg'.format( int( img ) ) ) )
 		
 class MapHandler( Handler ):
 
