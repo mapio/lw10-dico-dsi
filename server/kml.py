@@ -43,7 +43,7 @@ class Kml( object ):
 		return self.doc.toprettyxml( encoding = 'utf-8' )
 
 	def __getitem__( self, id ):
-		if not 0 <= id < self.len : raise IndexError
+		if not 0 <= id < self.len: raise IndexError
 		return self.placemarks[ id ]
 
 	def __len__( self ):
@@ -53,6 +53,7 @@ class Kml( object ):
 		id = 'img:{0:03d}'.format( self.len )
 		placemark.setAttributeNS( NAMESPACES[ 'xml' ].uri, '{0}:{1}'.format( NAMESPACES[ 'xml' ].prefix, 'id' ), id )
 		self.doc.documentElement.appendChild( placemark )
+		self.placemarks[ self.len ] = placemark
 		self.len += 1
 		return id
 
@@ -70,35 +71,20 @@ class Kml( object ):
 		f = open( self.filename, 'w' )
 		self.doc.writexml( f, encoding = 'utf-8' )
 		f.close()
-	
+		LOGGER.debug( 'Written kml to ' + self.filename )
+
 	def placemark( self, point ):
 		return self.element( 'Placemark', 
 			child = self.element( 'Point', 
 				child = self.element( 'coordinates', child = '{0},{1}'.format( point.lat, point.lon ) ) 
 			) 
 		)
-	
+
 	def creator( self, creator ):
 		return self.element( 'creator', 'dc', creator )
 
 	def name( self, name ):
 		return self.element( 'name', child = name )
-	
+
 	def description( self, description ):
 		return self.element( 'description', child = description )
-
-if __name__ == '__main__':
-	import sys
-	
-	if len( sys.argv ) == 2:
-		data = Kml( sys.argv[ 1 ] )
-		print len( data )
-		data[ 0 ].appendChild( data.creator( "Massimo Santini" ) )
-		data[ 1 ].appendChild( data.name( "Una foto" ) )
-		for x in data: print x.toprettyxml()
-	else:
-		data = Kml()
-		data.append( data.placemark( Point( 1, 2 ) ) )
-		data.append( data.placemark( Point( 3, 4 ) ) )
-		print data
-		data.write( 'test.xml' )
