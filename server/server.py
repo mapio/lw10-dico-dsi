@@ -1,4 +1,5 @@
 from cgi import FieldStorage, escape
+from mimetypes import guess_type
 from os import path, access, R_OK
 from shutil import copyfileobj
 from string import Template
@@ -36,16 +37,15 @@ class ImgHandler( Handler ):
 	def __call__( self ):
 		num = int( self.context.request_uri_parts[ 0 ] )
 		filename = path.join( 'img', '{0:03d}.jpg'.format( num ) )
-		if not path.exists( filename ) or not path.isfile( filename ):
-			return self.context.response( 404, 'File does not exist: ' + filename )
-		if not access( filename, R_OK ):
-			return self.context.response( 401, 'You do not have permission to access this file: ' + filename )
-		return self.context.response( 200, open( filename, 'rb' ), 'image/jpeg' )
-
+		return self.context.static( filename )
+		
 class MapHandler( Handler ):
 
 	def __call__( self ):
-		print self.context.request_uri_parts
+		application = self.context.request_uri_parts.pop( 0 )
+		f = open( path.join( 'map', path.join( application, application + '.html' ) ), 'r' )
+		self.template = Template( f.read() )
+		f.close()
 		return self.context.response( 200, 'MAP' )
 
 class TagHandler( Handler ):
@@ -103,7 +103,7 @@ class Context( object ):
 		self.environ = environ
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
-		self.request_uri_parts = request_uri( environ ).split( '/' )[ 3 : ]
+		self.request_uri_parts = request_uri( environ ).rstrip( '/' ).split( '/' )[ 3 : ]
 		application = self.request_uri_parts.pop( 0 )
 		try:
 			handle = self.handlers[ application ]
@@ -130,6 +130,17 @@ class Context( object ):
 		dest = open( dest_filename, 'wb' )
 		copyfileobj( self.post_data[ field_name ].file, dest )
 		dest.close()
+
+	def static( self, filename ):
+		if not path.exists( filename ) or not path.isfile( filename ):
+			return self.response( 404, 'File does not exist: ' + filename )
+		if not access( filename, R_OK ):
+			return self.response( 401, 'You do not have permission to access this file: ' + filename )
+		mime_type = guess_type( filename )[ 0 ]
+		f = open( filename, 'r' if mime_type.startswith( 'text/' ) else 'rb' )
+		data = f.read()
+		f.close()
+		return self.response( 200, data, mime_type )
 
 	@property
 	def post_data( self ):
