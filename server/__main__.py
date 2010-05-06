@@ -16,7 +16,7 @@ if __name__ == '__main__':
 	
 	kml = Kml( 'metadata.kml' )
 	context = Context( kml )	
-	server = make_server( 'localhost', 8000, context.run )	
+	server = make_server( 'localhost', 8000, context )	
 	open_new( 'http://localhost:8000/tag/upload' )
 	try:
 		while not context.stop: server.handle_request()

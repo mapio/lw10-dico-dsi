@@ -42,6 +42,11 @@ class ImgHandler( Handler ):
 			return self.context.response( 401, 'You do not have permission to access this file: ' + filename )
 		return self.context.response( 200, open( filename, 'rb' ), 'image/jpeg' )
 
+class MapHandler( Handler ):
+
+	def __call__( self ):
+		return self.context.response( 200, 'MAP' )
+
 class TagHandler( Handler ):
 
 	def __init__( self, context ):
@@ -88,11 +93,12 @@ class Context( object ):
 		self.handlers = {
 			'img': ImgHandler( self ),
 			'tag': TagHandler( self ),
+			'map': MapHandler( self )
 		}
 		self.kml = kml
 		self.stop = False
 
-	def run( self, environ, start_response ):
+	def __call__( self, environ, start_response ):
 		self.environ = environ
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
