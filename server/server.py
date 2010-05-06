@@ -44,9 +44,7 @@ class MapHandler( Handler ):
 		rup = self.context.request_uri_parts
 		app = rup.pop( 0 )
 		res = rup if rup else [ app + '.html' ]
-		filename = path.join( 'map', app, *res )
-		print filename
-		return self.context.static( filename )
+		return self.context.static( path.join( 'map', app, *res ) )
 
 class TagHandler( Handler ):
 
