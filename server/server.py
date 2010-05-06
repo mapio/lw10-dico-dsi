@@ -42,11 +42,12 @@ class ImgHandler( Handler ):
 class MapHandler( Handler ):
 
 	def __call__( self ):
-		application = self.context.request_uri_parts.pop( 0 )
-		f = open( path.join( 'map', path.join( application, application + '.html' ) ), 'r' )
-		self.template = Template( f.read() )
-		f.close()
-		return self.context.response( 200, 'MAP' )
+		rup = self.context.request_uri_parts
+		app = rup.pop( 0 )
+		res = rup if rup else [ app + '.html' ]
+		filename = path.join( 'map', app, *res )
+		print filename
+		return self.context.static( filename )
 
 class TagHandler( Handler ):
 
@@ -137,6 +138,7 @@ class Context( object ):
 		if not access( filename, R_OK ):
 			return self.response( 401, 'You do not have permission to access this file: ' + filename )
 		mime_type = guess_type( filename )[ 0 ]
+		if not mime_type: mime_type = 'application/octet-stream'
 		f = open( filename, 'r' if mime_type.startswith( 'text/' ) else 'rb' )
 		data = f.read()
 		f.close()
