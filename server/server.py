@@ -57,34 +57,35 @@ class TagHandler( Handler ):
 		self.templates = dict( ( _, _get( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
 
 	def __call__( self ):
-		def _html( title, body_template, **kwargs ):
-			return self.templates[ 'base' ].substitute( title = title, body = self.templates[ body_template ].substitute( **kwargs ) )
+		def _response( title, body_template, **kwargs ):
+			html = self.templates[ 'base' ].substitute( title = title, body = self.templates[ body_template ].substitute( **kwargs ) )
+			return self.context.response( 200, html, 'text/html' )
 		stage = self.context.request_uri_parts[ 0 ]
 		kml = self.context.kml
 		if stage == 'upload':
-			return self.context.response( 200, _html( 'Upload', 'upload' ), 'text/html' )
-		elif stage  == 'metadata':
+			return _response( 'Upload', 'upload' )
+		elif stage  == 'add':
 			dest = path.join( 'img', '{0:03d}.jpg'.format( len( kml ) ) )
 			self.context.post_file( 'file_field', dest )
 			point = extract_lat_lon( dest )
-			kml.append( kml.placemark( point ) )
 			if not point: point = Point( 0, 0 )
-			return self.context.response( 200, _html( 'Aggiungi metadati', 'metadata', num = len( kml ) - 1, lat = point.lat, lon = point.lon ), 'text/html' )
-		elif stage == 'confirm':
+			kml.append( kml.placemark( point ) )
+			return _response( 'Aggiungi metadati', 'metadata', num = len( kml ) - 1, lat = point.lat, lon = point.lon )
+		elif stage == 'metadata':
 			data = self.context.post_data
-			placemark = kml[ int( data[ 'num' ].value ) ]
+			placemark = kml[ int( self.context.request_uri_parts[ 1 ] ) ]
 			placemark.appendChild( kml.name( data[ 'name' ].value ) )
 			placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 			placemark.appendChild( kml.description( data[ 'description' ].value ) )
-			return self.context.response( 200, _html( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) ), 'text/html' )
+			return _response( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) )
 		elif stage == 'dump':
 			kml.write()
-			return self.context.response( 200, _html( 'Salvataggio', 'dump' ), 'text/html' )
+			return _response( 'Salvataggio', 'dump' )
 		elif stage == 'halt':
 			self.context.stop = True
-			return self.context.response( 200, '' )
+			return self.context.response( 200, 'Server halted.' )
 		else:
-			return self.context.response( 400, 'Tag application error' )
+			return self.context.response( 400, 'Tag application error.' )
 
 class Context( object ):
 
