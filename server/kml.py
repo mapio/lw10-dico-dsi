@@ -1,7 +1,7 @@
-from os import path, access, R_OK
-import xml.dom.minidom
-
 from collections import namedtuple
+from logging import getLogger
+from os.path import exists
+from xml.dom.minidom import Document, parse
 
 Point = namedtuple( 'Point', 'lat lon' )
 Namespace = namedtuple( 'Namespace', 'uri prefix' )
@@ -13,20 +13,24 @@ NAMESPACES = {
 	'xml': Namespace( 'http://www.w3.org/XML/1998/namespace', 'xml' ), 
 }
 
+LOGGER = getLogger( "server.kml" )
+
 class Kml( object ):
 
 	def __init__( self, filename ):
 		self.filename = filename
 		self.placemarks = {}
-		if path.exists( filename ):
+		if exists( filename ):
+			LOGGER.debug( 'Reading kml from ' + filename )
 			f = open( filename, 'r' )
-			self.doc = xml.dom.minidom.parse( f )
+			self.doc = parse( f )
 			f.close()
 			for placemark in self.doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' ):
 				id = placemark.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
 				self.placemarks[ int( id.split( ':' )[ 1 ] ) ] = placemark
 		else:
-			self.doc = xml.dom.minidom.Document()
+			LOGGER.debug( 'Creating empty kml' )
+			self.doc = Document()
 			root = self.doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
 			root.setAttribute( 'xmlns', NAMESPACES[ 'kml' ].uri )
 			root.setAttribute( 'xmlns:' + NAMESPACES[ 'foaf' ].prefix, NAMESPACES[ 'foaf' ].uri )
@@ -52,10 +56,14 @@ class Kml( object ):
 		self.len += 1
 		return id
 
-	def __element( self, tagName, namespace = 'kml', text = None, child = None ):
-		element = self.doc.createElementNS( NAMESPACES[ namespace ].uri, '{0}:{1}'.format( NAMESPACES[ namespace ].prefix, tagName ) if NAMESPACES[ namespace ].prefix else tagName )
-		if text: element.appendChild( self.doc.createTextNode( text ) )
-		if child: element.appendChild( child )
+	def element( self, tagName, namespace = 'kml', child = None ):
+		element = self.doc.createElementNS( 
+			NAMESPACES[ namespace ].uri, 
+			'{0}:{1}'.format( NAMESPACES[ namespace ].prefix, tagName ) if NAMESPACES[ namespace ].prefix else tagName 
+		)
+		if child: 
+			if isinstance( child, str ): element.appendChild( self.doc.createTextNode( child ) )
+			else: element.appendChild( child )
 		return element
 
 	def write( self ):
@@ -64,18 +72,20 @@ class Kml( object ):
 		f.close()
 	
 	def placemark( self, point ):
-		placemark = self.__element( 'Placemark' )
-		placemark.appendChild( self.__element( 'Point', child = self.__element( 'coordinates', text = '{0},{1}'.format( point.lat, point.lon ) ) ) )
-		return placemark
+		return self.element( 'Placemark', 
+			child = self.element( 'Point', 
+				child = self.element( 'coordinates', child = '{0},{1}'.format( point.lat, point.lon ) ) 
+			) 
+		)
 	
 	def creator( self, creator ):
-		return self.__element( 'creator', namespace = 'dc', text = creator )
+		return self.element( 'creator', 'dc', creator )
 
 	def name( self, name ):
-		return self.__element( 'name', text = name )
+		return self.element( 'name', child = name )
 	
 	def description( self, description ):
-		return self.__element( 'description', text = description )
+		return self.element( 'description', child = description )
 
 if __name__ == '__main__':
 	import sys
