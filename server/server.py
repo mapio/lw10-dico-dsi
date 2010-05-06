@@ -34,7 +34,7 @@ class Handler( object ):
 class ImgHandler( Handler ):
 
 	def __call__( self ):
-		num = int( self.context.request_uri_parts )
+		num = int( self.context.request_uri_parts[ 0 ] )
 		filename = path.join( 'img', '{0:03d}.jpg'.format( num ) )
 		if not path.exists( filename ) or not path.isfile( filename ):
 			return self.context.response( 404, 'File does not exist: ' + filename )
@@ -45,6 +45,7 @@ class ImgHandler( Handler ):
 class MapHandler( Handler ):
 
 	def __call__( self ):
+		print self.context.request_uri_parts
 		return self.context.response( 200, 'MAP' )
 
 class TagHandler( Handler ):
@@ -52,7 +53,7 @@ class TagHandler( Handler ):
 	def __init__( self, context ):
 		super( TagHandler, self ).__init__( context )
 		def _get( name ):
-			f = open( path.join( 'app', name + '.html' ), 'r' )
+			f = open( path.join( 'tag', name + '.html' ), 'r' )
 			return Template( f.read() )
 			f.close()
 		self.templates = dict( ( _, _get( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
@@ -60,7 +61,7 @@ class TagHandler( Handler ):
 	def __call__( self ):
 		def _html( title, body_template, **kwargs ):
 			return self.templates[ 'base' ].substitute( title = title, body = self.templates[ body_template ].substitute( **kwargs ) )
-		stage = self.context.request_uri_parts
+		stage = self.context.request_uri_parts[ 0 ]
 		kml = self.context.kml
 		if stage == 'upload':
 			return self.context.response( 200, _html( 'Upload', 'upload' ), 'text/html' )
@@ -85,7 +86,7 @@ class TagHandler( Handler ):
 			self.context.stop = True
 			return self.context.response( 200, '' )
 		else:
-			return self.context.response( 400 )
+			return self.context.response( 400, 'Tag application error' )
 
 class Context( object ):
 
@@ -102,11 +103,12 @@ class Context( object ):
 		self.environ = environ
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
+		self.request_uri_parts = request_uri( environ ).split( '/' )[ 3 : ]
+		application = self.request_uri_parts.pop( 0 )
 		try:
-			app, self.request_uri_parts = request_uri( environ ).split( '/' )[ 3 : ]
-			handle = self.handlers[ app ]
-		except ( KeyError, ValueError ):
-			return self.response( 400, data = request_uri( environ ) )
+			handle = self.handlers[ application ]
+		except KeyError:
+			return self.response( 400, 'No handler defined for "{0}" (uri {1})'.format( application, request_uri( environ ) ) )
 		else:
 			return handle()
 
