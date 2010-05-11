@@ -57,7 +57,12 @@ class MapHandler( Handler ):
 
 	def __call__( self ):
 		rup = self.context.request_uri_parts
-		app = rup.pop( 0 )
+		try:
+			app = rup.pop( 0 )
+		except IndexError:
+			return self.context.response( 400, 'No application specified in "map" (uri {0})'.format( request_uri( self.context.environ ) ) )
+		if not rup and not request_uri( self.context.environ ).endswith( '/' ):
+			return self.context.response( 400, 'Missing trailing / for "{0}" (uri {1})'.format( app, request_uri( self.context.environ ) ) )
 		res = rup if rup else [ app + '.html' ]
 		return self.context.static( path.join( 'map', app, *res ) )
 
@@ -75,7 +80,10 @@ class TagHandler( Handler ):
 		def _response( title, body_template, **kwargs ):
 			html = self.templates[ 'base' ].substitute( title = title, body = self.templates[ body_template ].substitute( **kwargs ) )
 			return self.context.response( 200, html, 'text/html' )
-		stage = self.context.request_uri_parts[ 0 ]
+		try:
+			stage = self.context.request_uri_parts.pop( 0 )
+		except IndexError:
+			return self.context.response( 400, 'No action specified in "tag" (uri {0})'.format( request_uri( self.context.environ ) ) )
 		kml = self.context.kml
 		if stage == 'upload':
 			return _response( 'Upload', 'upload' )
@@ -118,7 +126,10 @@ class Context( object ):
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
 		self.request_uri_parts = request_uri( environ ).rstrip( '/' ).split( '/' )[ 3 : ]
-		application = self.request_uri_parts.pop( 0 )
+		try:
+			application = self.request_uri_parts.pop( 0 )
+		except IndexError:
+			return self.response( 400, 'No application specified (uri {0})'.format( request_uri( environ ) ) )
 		try:
 			handle = self.handlers[ application ]
 		except KeyError:
@@ -130,6 +141,7 @@ class Context( object ):
 		HTTP_CODES = {
 			200: 'OK',
 			400: 'BAD REQUEST',
+			301: 'MOVED PERMANENTLY',
 			401: 'UNAUTHORIZED',
 			403: 'FORBIDDEN',
 			404: 'NOT FOUND',
