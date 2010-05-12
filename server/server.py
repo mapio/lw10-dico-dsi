@@ -110,13 +110,30 @@ class TagHandler( Handler ):
 		else:
 			return self.context.response( 400, 'Tag application error.' )
 
+class EditHandler( Handler ):
+	def __call__( self ):
+		file = self.context.request_uri_parts.pop( 0 )
+		if not self.context.request_uri_parts:
+			return self.context.static( path.join( 'static', 'edit.html' ) )
+		action = self.context.request_uri_parts.pop( 0 )
+		if action == 'load':
+			fp = open( path.join( 'map', file, file + '.js' ), 'r' )
+			code = fp.read()
+			fp.close()
+			return self.context.response( 200, code )
+		elif action == 'save':
+			fp = open( path.join( 'map', file, file + '.js' ), 'w' )
+			fp.write( self.context.post_data[ 'code' ].value )
+			return self.context.response( 200 )
+
 class Context( object ):
 
 	def __init__( self, kml ):
 		self.handlers = {
 			'img': ImgHandler( self ),
 			'tag': TagHandler( self ),
-			'map': MapHandler( self )
+			'map': MapHandler( self ),
+			'edit': EditHandler( self ),
 		}
 		self.kml = kml
 		self.stop = False
@@ -125,11 +142,14 @@ class Context( object ):
 		self.environ = environ
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
+		#print self.environ[ 'wsgi.input' ].read()
 		self.request_uri_parts = request_uri( environ ).rstrip( '/' ).split( '/' )[ 3 : ]
 		try:
 			application = self.request_uri_parts.pop( 0 )
 		except IndexError:
 			return self.response( 400, 'No application specified (uri {0})'.format( request_uri( environ ) ) )
+		if application == 'static':
+			return self.static( path.join( 'static', *self.request_uri_parts ) )
 		try:
 			handle = self.handlers[ application ]
 		except KeyError:
