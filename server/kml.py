@@ -15,7 +15,7 @@
 
 from collections import namedtuple
 from logging import getLogger
-from xml.dom.minidom import Document, parseString
+from xml.dom.minidom import Document
 
 Point = namedtuple( 'Point', 'lat lon' )
 Namespace = namedtuple( 'Namespace', 'uri prefix' )
@@ -34,14 +34,12 @@ class Kml( object ):
 	def __init__( self, res ):
 		self.res = res
 		self.placemarks = {}
-		if self.res.load_metadata():
-			LOGGER.debug( 'Reading kml from res' )
-			self.doc = parseString( self.res.load_metadata() )
+		self.doc = self.res.load_metadata()
+		if self.doc:
 			for placemark in self.doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' ):
 				id = placemark.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
 				self.placemarks[ int( id.split( ':' )[ 1 ] ) ] = placemark
 		else:
-			LOGGER.debug( 'Creating empty kml' )
 			self.doc = Document()
 			root = self.doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
 			root.setAttribute( 'xmlns', NAMESPACES[ 'kml' ].uri )
@@ -78,10 +76,6 @@ class Kml( object ):
 			if isinstance( child, str ): element.appendChild( self.doc.createTextNode( child ) )
 			else: element.appendChild( child )
 		return element
-
-	def write( self ):
-		self.res.save_metadata( self.doc.toxml( 'utf-8' ) )
-		LOGGER.debug( 'Written kml to res' )
 
 	def placemark( self, point ):
 		return self.element( 'Placemark', 

@@ -73,11 +73,7 @@ class TagHandler( Handler ):
 
 	def __init__( self, context ):
 		super( TagHandler, self ).__init__( context )
-		def _get( name ):
-			f = open( path.join( 'tag', name + '.html' ), 'r' )
-			return Template( f.read() )
-			f.close()
-		self.templates = dict( ( _, _get( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
+		self.templates = dict( ( _, context.res.load_template( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
 
 	def __call__( self ):
 		def _response( title, body_template, **kwargs ):
@@ -104,7 +100,7 @@ class TagHandler( Handler ):
 			placemark.appendChild( kml.description( data[ 'description' ].value ) )
 			return _response( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) )
 		elif stage == 'dump':
-			kml.write()
+			self.context.res.save_metadata( kml.doc )
 			return _response( 'Salvataggio', 'dump' )
 		elif stage == 'halt':
 			self.context.stop = True
@@ -134,15 +130,15 @@ class EditHandler( Handler ):
 class Context( object ):
 
 	def __init__( self, res, kml ):
+		self.res = res
+		self.kml = kml
+		self.stop = False
 		self.handlers = {
 			'img': ImgHandler( self ),
 			'tag': TagHandler( self ),
 			'map': MapHandler( self ),
 			'edit': EditHandler( self ),
 		}
-		self.res = res
-		self.kml = kml
-		self.stop = False
 
 	def __call__( self, environ, start_response ):
 		self.environ = environ

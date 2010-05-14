@@ -41,5 +41,5 @@ if __name__ == '__main__':
 		while not context.stop: server.handle_request()
 	except KeyboardInterrupt:
 		pass
-	kml.write()
+	res.save_metadata( kml.doc )
 	res.dump()
