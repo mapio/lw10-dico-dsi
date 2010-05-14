@@ -34,4 +34,4 @@ if __name__ == '__main__':
 		while not server.stop: simple_server.handle_request()
 	except KeyboardInterrupt:
 		pass
-	server,halt()
+	server.halt()

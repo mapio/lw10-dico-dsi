@@ -37,7 +37,7 @@ function addMarker( point, map ) {
   lat_lon = point.firstChild.firstChild.nodeValue.split( ',' );
   title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
   description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
-  src = "/img/" + parseInt( point.parentNode.attributes.getNamedItem('xml:id').value.split( ':' )[ 1 ] );
+  src = "/img/" + parseInt( point.parentNode.attributes.getNamedItem('xml:id').value.split( '_' )[ 1 ] );
   var marker = new google.maps.Marker( {
     position: new google.maps.LatLng( parseFloat( lat_lon[ 0 ] ), parseFloat( lat_lon[ 1 ] ) ), 
     map: map, 
