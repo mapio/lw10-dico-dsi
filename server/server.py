@@ -32,12 +32,11 @@ class Handler( object ):
 class ImgHandler( Handler ):
 
 	def __call__( self ):
-		_context = self.context
-		req = _context.request_uri_parts[ 0 ]
+		req = self.context.request_uri_parts[ 0 ]
 		if req == 'metadata':
-			return _context.response( 200, resources.load_metadata(), 'application/vnd.google-earth.kml+xml' )
+			return self.context.response( 200, resources.load_metadata(), 'application/vnd.google-earth.kml+xml' )
 		else:
-			return _context.response( 200, resources.load_image( int( req ) ), 'image/jpeg' )
+			return self.context.response( 200, resources.load_image( int( req ) ), 'image/jpeg' )
 
 class MapHandler( Handler ):
 
