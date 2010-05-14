@@ -33,12 +33,11 @@ HTTP_CODES = {
 
 templates = dict( ( _, resources.load_template( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
 stop = False
-environ = None
-start_response = None
 request_method = None
 request_uri = None
 request_uri_parts = None
 post_data = None
+__start_response = None
 
 def handle_img():
 	req = request_uri_parts[ 0 ]
@@ -52,11 +51,11 @@ def handle_map():
 	try:
 		app = rup.pop( 0 )
 	except IndexError:
-		return response( 400, 'No application specified in "map" (uri {0})'.format( request_uri( environ ) ) )
-	if not rup and not request_uri( environ ).endswith( '/' ):
-		return response( 400, 'Missing trailing / for "{0}" (uri {1})'.format( app, request_uri( environ ) ) )
+		return response( 400, 'No application specified in "map" (uri {0})'.format( request_uri ) )
+	if not rup and not request_uri.endswith( '/' ):
+		return response( 400, 'Missing trailing / for "{0}" (uri {1})'.format( app, request_uri ) )
 	res = rup if rup else [ app + '.html' ]
-	return static( path.join( 'map', app, *res ) )
+	return static( '/'.join( [ app ] + res ) )
 
 def handle_tag():
 	def _response( title, body_template, **kwargs ):
@@ -101,10 +100,9 @@ def handle_edit():
 		resources.save_code( name, post_data[ 'code' ].value )
 		return response( 200 )
 
-def application( _environ, _start_response ):
-	global environ, start_response, request_method, request_uri_parts, post_data, request_uri, stop
-	environ = _environ
-	start_response = _start_response
+def application( environ, start_response ):
+	global __start_response, request_method, request_uri_parts, post_data, request_uri, stop
+	__start_response = start_response
 	request_method = environ[ 'REQUEST_METHOD' ]
 	request_uri = wsgi_request_uri( environ )
 	request_uri_parts = request_uri.rstrip( '/' ).split( '/' )[ 3 : ]
@@ -112,9 +110,9 @@ def application( _environ, _start_response ):
 	try:
 		application = request_uri_parts.pop( 0 )
 	except IndexError:
-		return response( 400, 'No application specified (uri {0})'.format( request_uri( environ ) ) )
+		return response( 400, 'No application specified (uri {0})'.format( request_uri ) )
 	if application == 'static':
-		return static( path.join( *request_uri_parts ) )
+		return static( '/'.join( request_uri_parts ) )
 	if application == 'halt':
 		stop = True
 		return response( 200, 'Server halted.' )
@@ -126,7 +124,7 @@ def application( _environ, _start_response ):
 		return handle()
 
 def response( status = 200, data = '', content_type = 'text/plain; charset=utf-8' ):
-	start_response( '{0} {1}'.format( status, HTTP_CODES[ status ] ), [ ( 'Content-type', content_type ) ] )
+	__start_response( '{0} {1}'.format( status, HTTP_CODES[ status ] ), [ ( 'Content-type', content_type ) ] )
 	if isinstance( data, str ): data = [ data ]
 	return data
 
