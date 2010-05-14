@@ -17,8 +17,7 @@ if path.exists( 'data.zip' ):
 	with open( 'data.zip', 'rb' ) as f:
 		zf = ZipFile( f, 'r' )
 		for zi in zf.infolist():
-			if zi.file_size:
-				__data[ zi.filename[ len( 'resources/' ) : ] ] = zf.read( zi )
+			if zi.file_size: __data[ zi.filename ] = zf.read( zi )
 		zf.close()
 
 def load_template( name ):
