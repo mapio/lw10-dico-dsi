@@ -15,11 +15,13 @@
 
 from logging import StreamHandler, Formatter, getLogger, DEBUG
 from os import path
+from sys import argv
 from webbrowser import open_new
 from wsgiref.simple_server import make_server
 
 from kml import Kml
 from server import Context
+from resources import Resources
 
 if __name__ == '__main__':
 	
@@ -30,12 +32,14 @@ if __name__ == '__main__':
 	ch.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
 	ROOT_LOGGER.addHandler( ch )
 	
-	kml = Kml( path.join( 'img', 'metadata.kml' ) )
-	context = Context( kml )	
+	res = Resources( 'res.zip' )
+	kml = Kml( res )
+	context = Context( res, kml )	
 	server = make_server( 'localhost', 8000, context )	
 	#open_new( 'http://localhost:8000/tag/upload' )
 	try:
 		while not context.stop: server.handle_request()
 	except KeyboardInterrupt:
 		pass
-	kml.write()	
+	kml.write()
+	res.dump()

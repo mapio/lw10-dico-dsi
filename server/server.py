@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from cgi import FieldStorage, escape
+from io import BytesIO
 from mimetypes import guess_type
 from os import path, access, R_OK
 from shutil import copyfileobj
@@ -24,10 +25,10 @@ from wsgiref.util import request_uri
 from exif import process_file
 from kml import Kml, Point
 
-def extract_lat_lon( filename ):
+def extract_lat_lon( data ):
 	def rat2float( vals ):
 		return [ float( _.num ) / float( _.den ) for _ in vals ]
-	fp = open( filename, 'rb' )
+	fp = BytesIO( data )
 	tags = process_file( fp )
 	fp.close()
 	try:
@@ -50,9 +51,11 @@ class Handler( object ):
 class ImgHandler( Handler ):
 
 	def __call__( self ):
-		img = self.context.request_uri_parts[ 0 ]
-		return self.context.static( path.join( 'img', 'metadata.kml' if img == 'metadata' else '{0:03d}.jpg'.format( int( img ) ) ) )
-		
+		_context = self.context
+		req = _context.request_uri_parts[ 0 ]
+		return _context.response( 200, _context.res.load_image( int( req ) ), guess_type( '0.jpg' )[ 0 ] )
+		#return self.context.static( path.join( 'img', 'metadata.kml' if img == 'metadata' else '{0:03d}.jpg'.format( int( img ) ) ) )
+
 class MapHandler( Handler ):
 
 	def __call__( self ):
@@ -80,23 +83,22 @@ class TagHandler( Handler ):
 		def _response( title, body_template, **kwargs ):
 			html = self.templates[ 'base' ].substitute( title = title, body = self.templates[ body_template ].substitute( **kwargs ) )
 			return self.context.response( 200, html, 'text/html' )
-		try:
-			stage = self.context.request_uri_parts.pop( 0 )
-		except IndexError:
-			return self.context.response( 400, 'No action specified in "tag" (uri {0})'.format( request_uri( self.context.environ ) ) )
+		if not self.context.request_uri_parts: stage = 'upload'
+		else: stage = self.context.request_uri_parts.pop( 0 )
 		kml = self.context.kml
 		if stage == 'upload':
 			return _response( 'Upload', 'upload' )
 		elif stage  == 'add':
-			dest = path.join( 'img', '{0:03d}.jpg'.format( len( kml ) ) )
-			self.context.post_file( 'file_field', dest )
-			point = extract_lat_lon( dest )
+			if not self.context.post_data[ 'file_field' ].filename: return _response( 'Upload', 'upload' )
+			data = self.context.post_data[ 'file_field' ].file.read()
+			self.context.res.save_image( len( kml ), data )
+			point = extract_lat_lon( data )
 			if not point: point = Point( 0, 0 )
 			kml.append( kml.placemark( point ) )
 			return _response( 'Aggiungi metadati', 'metadata', num = len( kml ) - 1, lat = point.lat, lon = point.lon )
 		elif stage == 'metadata':
 			data = self.context.post_data
-			placemark = kml[ int( self.context.request_uri_parts[ 1 ] ) ]
+			placemark = kml[ int( self.context.request_uri_parts[ 0 ] ) ]
 			placemark.appendChild( kml.name( data[ 'name' ].value ) )
 			placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 			placemark.appendChild( kml.description( data[ 'description' ].value ) )
@@ -108,11 +110,14 @@ class TagHandler( Handler ):
 			self.context.stop = True
 			return self.context.response( 200, 'Server halted.' )
 		else:
-			return self.context.response( 400, 'Tag application error.' )
+			return self.context.response( 400, 'Tag application error (this should never happen).' )
 
 class EditHandler( Handler ):
 	def __call__( self ):
-		file = self.context.request_uri_parts.pop( 0 )
+		try:
+			file = self.context.request_uri_parts.pop( 0 )
+		except IndexError:
+			return self.response( 400, 'No application to edit (uri {0})'.format( request_uri( self.context.environ ) ) )
 		if not self.context.request_uri_parts:
 			return self.context.static( path.join( 'static', 'edit.html' ) )
 		action = self.context.request_uri_parts.pop( 0 )
@@ -128,13 +133,14 @@ class EditHandler( Handler ):
 
 class Context( object ):
 
-	def __init__( self, kml ):
+	def __init__( self, res, kml ):
 		self.handlers = {
 			'img': ImgHandler( self ),
 			'tag': TagHandler( self ),
 			'map': MapHandler( self ),
 			'edit': EditHandler( self ),
 		}
+		self.res = res
 		self.kml = kml
 		self.stop = False
 
@@ -142,8 +148,8 @@ class Context( object ):
 		self.environ = environ
 		self.start_response = start_response
 		self.request_method = self.environ[ 'REQUEST_METHOD' ]
-		#print self.environ[ 'wsgi.input' ].read()
 		self.request_uri_parts = request_uri( environ ).rstrip( '/' ).split( '/' )[ 3 : ]
+		self.__post_data = None
 		try:
 			application = self.request_uri_parts.pop( 0 )
 		except IndexError:
@@ -191,4 +197,6 @@ class Context( object ):
 
 	@property
 	def post_data( self ):
-		return FieldStorage( fp = self.environ[ 'wsgi.input' ], environ = self.environ, keep_blank_values = 1 )
+		if not self.__post_data:
+			self.__post_data = FieldStorage( fp = self.environ[ 'wsgi.input' ], environ = self.environ, keep_blank_values = 1 )
+		return self.__post_data
