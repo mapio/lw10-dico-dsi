@@ -19,8 +19,7 @@ from sys import argv
 from webbrowser import open_new
 from wsgiref.simple_server import make_server
 
-from server import Context
-
+import server
 import resources
 
 if __name__ == '__main__':
@@ -32,11 +31,10 @@ if __name__ == '__main__':
 	ch.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
 	ROOT_LOGGER.addHandler( ch )
 	
-	context = Context()	
-	server = make_server( 'localhost', 8000, context )	
+	simple_server = make_server( 'localhost', 8000, server.application )	
 	#open_new( 'http://localhost:8000/tag/upload' )
 	try:
-		while not context.stop: server.handle_request()
+		while not server.stop: simple_server.handle_request()
 	except KeyboardInterrupt:
 		pass
 	resources.dump()
