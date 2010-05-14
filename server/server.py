@@ -60,7 +60,7 @@ def handle_map():
 
 def handle_tag():
 	def _response( title, body_template, **kwargs ):
-		html = apps.html( title = title, body = templates[ body_template ].substitute( **kwargs ) )
+		html = resources.base_template( title, templates[ body_template ].substitute( **kwargs ) )
 		return response( 200, html, 'text/html' )
 	if not request_uri_parts: stage = 'upload'
 	else: stage = request_uri_parts.pop( 0 )

@@ -26,9 +26,12 @@ __data = dict()
 
 with open( argv[ 0 ], 'rb' ) as f:
 	zf = ZipFile( f, 'r' )
+	prefix_len = len( 'resources/' )
 	for zi in zf.infolist():
 		if zi.file_size and zi.filename.startswith( 'resources/' ):
-			__data[ zi.filename[ len( 'resources/' ) : ] ] = zf.read( zi )
+			name = zi.filename[ prefix_len : ]
+			data = zf.read( zi )
+			__data[ name ] = Template( data ) if name.startswith( 'templates/' ) else data
 	zf.close()
 
 if path.exists( 'data.zip' ): 
@@ -42,7 +45,7 @@ def load_static( name ):
 	return __data[ 'static/' + name ]
 
 def load_template( name ):
-	return Template( __data[ 'templates/{0}.html'.format( name ) ] )
+	return __data[ 'templates/{0}.html'.format( name ) ]
 
 def load_code( name ):
 	return __data[ 'code/{0}.js'.format( name ) ]
