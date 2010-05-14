@@ -4,3 +4,4 @@ cd server
 zip -r --exclude=*.svn* ../server.zip * >/dev/null 2>&1
 cd ..
 python server.zip
+unzip -l data.zip
