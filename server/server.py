@@ -34,8 +34,10 @@ class ImgHandler( Handler ):
 	def __call__( self ):
 		_context = self.context
 		req = _context.request_uri_parts[ 0 ]
-		return _context.response( 200, resources.load_image( int( req ) ), guess_type( '0.jpg' )[ 0 ] )
-		#return self.context.static( path.join( 'img', 'metadata.kml' if img == 'metadata' else '{0:03d}.jpg'.format( int( img ) ) ) )
+		if req == 'metadata':
+			return _context.response( 200, resources.load_metadata(), 'application/vnd.google-earth.kml+xml' )
+		else:
+			return _context.response( 200, resources.load_image( int( req ) ), 'image/jpeg' )
 
 class MapHandler( Handler ):
 
@@ -82,29 +84,22 @@ class TagHandler( Handler ):
 		elif stage == 'dump':
 			resources.save_metadata()
 			return _response( 'Salvataggio', 'dump' )
-		elif stage == 'halt':
-			self.context.stop = True
-			return self.context.response( 200, 'Server halted.' )
 		else:
 			return self.context.response( 400, 'Tag application error (this should never happen).' )
 
 class EditHandler( Handler ):
 	def __call__( self ):
 		try:
-			file = self.context.request_uri_parts.pop( 0 )
+			name = self.context.request_uri_parts.pop( 0 )
 		except IndexError:
 			return self.response( 400, 'No application to edit (uri {0})'.format( request_uri( self.context.environ ) ) )
 		if not self.context.request_uri_parts:
-			return self.context.static( path.join( 'static', 'edit.html' ) )
+			return self.context.static( 'edit.html' )
 		action = self.context.request_uri_parts.pop( 0 )
 		if action == 'load':
-			fp = open( path.join( 'map', file, file + '.js' ), 'r' )
-			code = fp.read()
-			fp.close()
-			return self.context.response( 200, code )
-		elif action == 'save':
-			fp = open( path.join( 'map', file, file + '.js' ), 'w' )
-			fp.write( self.context.post_data[ 'code' ].value )
+			return self.context.response( 200, resources.load_code( name ) )
+		elif action == 'save' and self.context.request_method == 'POST':
+			resources.save_code( name, self.context.post_data[ 'code' ].value )
 			return self.context.response( 200 )
 
 class Context( object ):
@@ -129,7 +124,10 @@ class Context( object ):
 		except IndexError:
 			return self.response( 400, 'No application specified (uri {0})'.format( request_uri( environ ) ) )
 		if application == 'static':
-			return self.static( path.join( 'static', *self.request_uri_parts ) )
+			return self.static( path.join( *self.request_uri_parts ) )
+		if application == 'halt':
+			self.stop = True
+			return self.response( 200, 'Server halted.' )
 		try:
 			handle = self.handlers[ application ]
 		except KeyError:
@@ -157,16 +155,13 @@ class Context( object ):
 		copyfileobj( self.post_data[ field_name ].file, dest )
 		dest.close()
 
-	def static( self, filename ):
-		if not path.exists( filename ) or not path.isfile( filename ):
-			return self.response( 404, 'File does not exist: ' + filename )
-		if not access( filename, R_OK ):
-			return self.response( 401, 'You do not have permission to access this file: ' + filename )
-		mime_type = guess_type( filename )[ 0 ]
+	def static( self, name ):
+		try:
+			data = resources.load_static( name )
+		except:
+			return self.response( 404, 'Not present in static/: ' + name )
+		mime_type = guess_type( name.rsplit( '/', 1 )[ -1 ] )[ 0 ]
 		if not mime_type: mime_type = 'application/octet-stream'
-		f = open( filename, 'r' if mime_type.startswith( 'text/' ) else 'rb' )
-		data = f.read()
-		f.close()
 		return self.response( 200, data, mime_type )
 
 	@property

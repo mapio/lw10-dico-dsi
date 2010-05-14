@@ -24,26 +24,29 @@ if path.exists( 'data.zip' ):
 def load_template( name ):
 	return Template( __data[ 'templates/{0}.html'.format( name ) ] )
 	
-def load_image( n ):
-	return __data[ 'img/{0:03d}.jpg'.format( n ) ]
+def load_image( num ):
+	return __data[ 'img/{0:03d}.jpg'.format( num ) ]
 	
-def save_image( n, image ):
-	__data[ 'img/{0:03d}.jpg'.format( n ) ] = image
+def save_image( num, image ):
+	__data[ 'img/{0:03d}.jpg'.format( num ) ] = image
 	
 def load_metadata():
 	try:
 		return __data[ 'img/metadata.kml' ]
 	except KeyError:
 		return None
+
+def load_static( name ):
+		return __data[ 'static/' + name ]
 	
 def save_metadata():
 	__data[ 'img/metadata.kml' ] = kml.to_string()
 	
 def load_code( name ):
-	pass
+	return __data[ 'code/{0}.js'.format( name ) ]
 	
 def save_code( name, code ):
-	pass
+	__data[ 'code/{0}.js'.format( name ) ] = code
 
 def dump():
 	save_metadata()
