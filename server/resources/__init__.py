@@ -20,8 +20,6 @@ from sys import argv
 from xml.dom.minidom import parseString
 from zipfile import ZipFile
 
-import kml
-
 __data = dict()
 
 with open( argv[ 0 ], 'rb' ) as f:
@@ -66,8 +64,10 @@ def load_metadata():
 		return None
 	return parseString( string )
 
+def save_metadata( string ):
+	__data[ 'img/metadata.kml' ] = string
+
 def dump():
-	__data[ 'img/metadata.kml' ] = kml.string()
 	with open( 'data.zip', 'wb' ) as f:
 		zf = ZipFile( f, 'w' )
 		for arcname, bytes in __data.iteritems():

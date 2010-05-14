@@ -51,6 +51,9 @@ else:
 	doc.appendChild( root )
 	placemarks = []
 
+def dump():
+	resources.save_metadata( string() )
+
 def string():
 	return doc.toxml( 'utf-8' )
 	

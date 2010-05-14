@@ -17,9 +17,9 @@ from cgi import FieldStorage, escape
 from mimetypes import guess_type
 from wsgiref.util import request_uri as wsgi_request_uri
 
-import apps
 import kml
 import resources
+import templates
 
 HTTP_CODES = {
 	200: 'OK',
@@ -32,7 +32,6 @@ HTTP_CODES = {
 	500: 'INTERNAL SERVER ERROR',
 }
 
-templates = dict( ( _, resources.load_template( _ ) ) for _ in 'upload metadata confirm'.split() )
 stop = False
 request_method = None
 request_uri = None
@@ -59,28 +58,25 @@ def handle_map():
 	return static( '/'.join( [ app ] + res ) )
 
 def handle_tag():
-	def _response( title, body_template, **kwargs ):
-		html = resources.base_template( title, templates[ body_template ].substitute( **kwargs ) )
-		return response( 200, html, 'text/html' )
 	if not request_uri_parts: stage = 'upload'
 	else: stage = request_uri_parts.pop( 0 )
 	if stage == 'upload':
-		return _response( 'Upload', 'upload' )
+		return html( 'upload' )
 	elif stage  == 'add':
-		if not post_data[ 'file_field' ].filename: return _response( 'Upload', 'upload' )
+		if not post_data[ 'file_field' ].filename: return html( 'upload' )
 		data = post_data[ 'file_field' ].file.read()
 		num = len( kml.placemarks )
 		resources.save_image( num, data )
 		point = kml.extract_lat_lon( data )
 		kml.append( kml.placemark( point ) )
-		return _response( 'Aggiungi metadati', 'metadata', num = num, lat = point.lat, lon = point.lon )
+		return html( 'metadata', num = num, lat = point.lat, lon = point.lon )
 	elif stage == 'metadata':
 		data = post_data
 		placemark = kml.placemarks[ int( request_uri_parts[ 0 ] ) ]
 		placemark.appendChild( kml.name( data[ 'name' ].value ) )
 		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 		placemark.appendChild( kml.description( data[ 'description' ].value ) )
-		return _response( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) )
+		return html( 'confirm', placemark = escape( placemark.toprettyxml() ) )
 	else:
 		return response( 400, 'Tag application error (this should never happen).' )
 
@@ -90,7 +86,7 @@ def handle_edit():
 	except IndexError:
 		return response( 400, 'No application to edit (uri {0})'.format( request_uri ) )
 	if not request_uri_parts:
-		return static( 'edit.html' )
+		return html( 'edit' )
 	action = request_uri_parts.pop( 0 )
 	if action == 'load':
 		return response( 200, resources.load_code( name ) )
@@ -112,7 +108,7 @@ def application( environ, start_response ):
 	if application == 'static':
 		return static( '/'.join( request_uri_parts ) )
 	if application == 'halt':
-		stop = True
+		halt()
 		return response( 200, 'Server halted.' )
 	try:
 		handle = globals()[ 'handle_' + application ]
@@ -121,10 +117,18 @@ def application( environ, start_response ):
 	else:
 		return handle()
 
+def halt():
+	stop = True
+	kml.dump()
+	resources.dump()
+
 def response( status = 200, data = '', content_type = 'text/plain; charset=utf-8' ):
 	__start_response( '{0} {1}'.format( status, HTTP_CODES[ status ] ), [ ( 'Content-type', content_type ) ] )
 	if isinstance( data, str ): data = [ data ]
 	return data
+
+def html( name, **kwargs ):
+	return response( 200, templates.html( name, **kwargs ), 'text/html' )
 
 def static( name ):
 	try:

@@ -16,11 +16,9 @@
 from logging import StreamHandler, Formatter, getLogger, DEBUG
 from os import path
 from sys import argv
-from webbrowser import open_new
 from wsgiref.simple_server import make_server
 
 import server
-import resources
 
 if __name__ == '__main__':
 	
@@ -32,9 +30,8 @@ if __name__ == '__main__':
 	ROOT_LOGGER.addHandler( ch )
 	
 	simple_server = make_server( 'localhost', 8000, server.application )	
-	#open_new( 'http://localhost:8000/tag/upload' )
 	try:
 		while not server.stop: simple_server.handle_request()
 	except KeyboardInterrupt:
 		pass
-	resources.dump()
+	server,halt()
