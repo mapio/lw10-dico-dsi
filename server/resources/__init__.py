@@ -27,7 +27,7 @@ __data = dict()
 with open( argv[ 0 ], 'rb' ) as f:
 	zf = ZipFile( f, 'r' )
 	for zi in zf.infolist():
-		if zi.file_size and zi.filename.startswith( 'resources/' ) and '/' in zi.filename:
+		if zi.file_size and zi.filename.startswith( 'resources/' ):
 			__data[ zi.filename[ len( 'resources/' ) : ] ] = zf.read( zi )
 	zf.close()
 
