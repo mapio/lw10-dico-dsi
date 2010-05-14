@@ -16,7 +16,7 @@
 from collections import namedtuple
 from io import BytesIO
 from logging import getLogger
-from xml.dom.minidom import Document, parseString
+from xml.dom.minidom import Document
 
 from exif import process_file
 
@@ -34,8 +34,8 @@ LOGGER = getLogger( "server.kml" )
 
 import resources
 
-if resources.load_metadata():
-	doc = parseString( resources.load_metadata() )
+doc = resources.load_metadata()
+if doc:
 	xml_placemarks = doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' )
 	placemarks = [ None ] * len( xml_placemarks )
 	for placemark in xml_placemarks:
@@ -51,7 +51,7 @@ else:
 	doc.appendChild( root )
 	placemarks = []
 
-def to_string():
+def string():
 	return doc.toxml( 'utf-8' )
 	
 def append( placemark ):
@@ -59,7 +59,6 @@ def append( placemark ):
 	placemark.setAttributeNS( NAMESPACES[ 'xml' ].uri, '{0}:{1}'.format( NAMESPACES[ 'xml' ].prefix, 'id' ), id )
 	placemarks.append( placemark )
 	doc.documentElement.appendChild( placemark )
-	return id
 
 def element( tagName, namespace = 'kml', child = None ):
 	element = doc.createElementNS( 

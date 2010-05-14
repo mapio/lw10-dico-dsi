@@ -17,6 +17,7 @@ from cgi import FieldStorage, escape
 from mimetypes import guess_type
 from wsgiref.util import request_uri as wsgi_request_uri
 
+import apps
 import kml
 import resources
 
@@ -31,7 +32,7 @@ HTTP_CODES = {
 	500: 'INTERNAL SERVER ERROR',
 }
 
-templates = dict( ( _, resources.load_template( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
+templates = dict( ( _, resources.load_template( _ ) ) for _ in 'upload metadata confirm'.split() )
 stop = False
 request_method = None
 request_uri = None
@@ -42,7 +43,7 @@ __start_response = None
 def handle_img():
 	req = request_uri_parts[ 0 ]
 	if req == 'metadata':
-		return response( 200, resources.load_metadata(), 'application/vnd.google-earth.kml+xml' )
+		return response( 200, kml.string(), 'application/vnd.google-earth.kml+xml' )
 	else:
 		return response( 200, resources.load_image( int( req ) ), 'image/jpeg' )
 
@@ -59,7 +60,7 @@ def handle_map():
 
 def handle_tag():
 	def _response( title, body_template, **kwargs ):
-		html = templates[ 'base' ].substitute( title = title, body = templates[ body_template ].substitute( **kwargs ) )
+		html = apps.html( title = title, body = templates[ body_template ].substitute( **kwargs ) )
 		return response( 200, html, 'text/html' )
 	if not request_uri_parts: stage = 'upload'
 	else: stage = request_uri_parts.pop( 0 )
@@ -80,9 +81,6 @@ def handle_tag():
 		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 		placemark.appendChild( kml.description( data[ 'description' ].value ) )
 		return _response( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) )
-	elif stage == 'dump':
-		resources.save_metadata()
-		return _response( 'Salvataggio', 'dump' )
 	else:
 		return response( 400, 'Tag application error (this should never happen).' )
 
