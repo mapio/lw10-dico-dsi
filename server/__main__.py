@@ -19,9 +19,9 @@ from sys import argv
 from webbrowser import open_new
 from wsgiref.simple_server import make_server
 
-from kml import Kml
 from server import Context
-from resources import Resources
+
+import resources
 
 if __name__ == '__main__':
 	
@@ -32,14 +32,11 @@ if __name__ == '__main__':
 	ch.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
 	ROOT_LOGGER.addHandler( ch )
 	
-	res = Resources( 'res.zip' )
-	kml = Kml( res )
-	context = Context( res, kml )	
+	context = Context()	
 	server = make_server( 'localhost', 8000, context )	
 	#open_new( 'http://localhost:8000/tag/upload' )
 	try:
 		while not context.stop: server.handle_request()
 	except KeyboardInterrupt:
 		pass
-	res.save_metadata( kml.doc )
-	res.dump()
+	resources.dump()

@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from cgi import FieldStorage, escape
-from io import BytesIO
 from mimetypes import guess_type
 from os import path, access, R_OK
 from shutil import copyfileobj
@@ -22,26 +21,8 @@ from string import Template
 from sys import exit
 from wsgiref.util import request_uri
 
-from exif import process_file
-from kml import Kml, Point
-
-def extract_lat_lon( data ):
-	def rat2float( vals ):
-		return [ float( _.num ) / float( _.den ) for _ in vals ]
-	fp = BytesIO( data )
-	tags = process_file( fp )
-	fp.close()
-	try:
-		lat_ref = tags[ 'GPS GPSLatitudeRef' ].values
-		lat_rat = rat2float( tags[ 'GPS GPSLatitude' ].values )
-		lon_ref = tags[ 'GPS GPSLongitudeRef' ].values
-		lon_rat = rat2float( tags[ 'GPS GPSLongitude' ].values )
-	except KeyError:
-		return None
-	return Point(
-		( lat_rat[ 0 ] + lat_rat[ 1 ] / 60 + lat_rat[ 2 ] / 3600 ) * ( 1 if lat_ref == "N" else -1 ),
-		( lon_rat[ 0 ] + lon_rat[ 1 ] / 60 + lon_rat[ 2 ] / 3600 ) * ( -1 if lon_ref == "W" else 1 )
-	)
+import kml
+import resources
 
 class Handler( object ):
 
@@ -53,7 +34,7 @@ class ImgHandler( Handler ):
 	def __call__( self ):
 		_context = self.context
 		req = _context.request_uri_parts[ 0 ]
-		return _context.response( 200, _context.res.load_image( int( req ) ), guess_type( '0.jpg' )[ 0 ] )
+		return _context.response( 200, resources.load_image( int( req ) ), guess_type( '0.jpg' )[ 0 ] )
 		#return self.context.static( path.join( 'img', 'metadata.kml' if img == 'metadata' else '{0:03d}.jpg'.format( int( img ) ) ) )
 
 class MapHandler( Handler ):
@@ -73,7 +54,7 @@ class TagHandler( Handler ):
 
 	def __init__( self, context ):
 		super( TagHandler, self ).__init__( context )
-		self.templates = dict( ( _, context.res.load_template( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
+		self.templates = dict( ( _, resources.load_template( _ ) ) for _ in 'base upload metadata confirm dump'.split() )
 
 	def __call__( self ):
 		def _response( title, body_template, **kwargs ):
@@ -81,26 +62,25 @@ class TagHandler( Handler ):
 			return self.context.response( 200, html, 'text/html' )
 		if not self.context.request_uri_parts: stage = 'upload'
 		else: stage = self.context.request_uri_parts.pop( 0 )
-		kml = self.context.kml
 		if stage == 'upload':
 			return _response( 'Upload', 'upload' )
 		elif stage  == 'add':
 			if not self.context.post_data[ 'file_field' ].filename: return _response( 'Upload', 'upload' )
 			data = self.context.post_data[ 'file_field' ].file.read()
-			self.context.res.save_image( len( kml ), data )
-			point = extract_lat_lon( data )
-			if not point: point = Point( 0, 0 )
+			num = len( kml.placemarks )
+			resources.save_image( num, data )
+			point = kml.extract_lat_lon( data )
 			kml.append( kml.placemark( point ) )
-			return _response( 'Aggiungi metadati', 'metadata', num = len( kml ) - 1, lat = point.lat, lon = point.lon )
+			return _response( 'Aggiungi metadati', 'metadata', num = num, lat = point.lat, lon = point.lon )
 		elif stage == 'metadata':
 			data = self.context.post_data
-			placemark = kml[ int( self.context.request_uri_parts[ 0 ] ) ]
+			placemark = kml.placemarks[ int( self.context.request_uri_parts[ 0 ] ) ]
 			placemark.appendChild( kml.name( data[ 'name' ].value ) )
 			placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 			placemark.appendChild( kml.description( data[ 'description' ].value ) )
 			return _response( 'Conferma', 'confirm', placemark = escape( placemark.toprettyxml() ) )
 		elif stage == 'dump':
-			self.context.res.save_metadata( kml.doc )
+			resources.save_metadata()
 			return _response( 'Salvataggio', 'dump' )
 		elif stage == 'halt':
 			self.context.stop = True
@@ -129,9 +109,7 @@ class EditHandler( Handler ):
 
 class Context( object ):
 
-	def __init__( self, res, kml ):
-		self.res = res
-		self.kml = kml
+	def __init__( self ):
 		self.stop = False
 		self.handlers = {
 			'img': ImgHandler( self ),
