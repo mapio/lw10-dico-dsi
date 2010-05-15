@@ -12,7 +12,8 @@ __templates = {
 	'metadata': Template( 'Annota aggiungendo metadati', 'metadata', None, None ),
 	'confirm': Template( 'Conferma', 'confirm', None, None ),
 	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ BASIC_CSS ] ),
-	'basic': Template( 'Una sempilce mappa', 'basicmap', [ GMAP_JS, '/edit/basic/load' ], [ BASIC_CSS ] ),
+	'somma': Template( 'Somma', 'somma', [ '/edit/somma/load' ], None ),
+	'semplice': Template( 'Una sempilce mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 }
 
 __base_template = resources.load_template( 'base' )
