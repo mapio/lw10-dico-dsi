@@ -13,8 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from io import BytesIO
-from os import path
+from os.path import exists
 from string import Template
 from sys import argv
 from xml.dom.minidom import parseString
@@ -32,7 +31,7 @@ with open( argv[ 0 ], 'rb' ) as f:
 			__data[ name ] = Template( data ) if name.startswith( 'templates/' ) else data
 	zf.close()
 
-if path.exists( 'data.zip' ): 
+if exists( 'data.zip' ): 
 	with open( 'data.zip', 'rb' ) as f:
 		zf = ZipFile( f, 'r' )
 		for zi in zf.infolist():
