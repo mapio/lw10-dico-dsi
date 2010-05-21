@@ -27,8 +27,9 @@ __templates = {
 	'metadata': Template( 'Annota aggiungendo metadati', 'metadata', None, None ),
 	'confirm': Template( 'Conferma', 'confirm', None, None ),
 	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ BASIC_CSS ] ),
+	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
 	'somma': Template( 'Somma', 'somma', [ '/edit/somma/load' ], None ),
-	'semplice': Template( 'Una sempilce mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
+	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 }
 
 def base_template( title, body, js = '',css = '' ):

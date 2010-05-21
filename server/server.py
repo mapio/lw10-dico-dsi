@@ -62,6 +62,9 @@ def handle_run():
 		return http( 400, 'No application specified in "run" (uri {0})'.format( request_uri ) )
 	return html( app )
 
+def handle_shell():
+	return html( 'shell' )
+
 def handle_static():
 	name = '/'.join( request_uri_parts )
 	try:

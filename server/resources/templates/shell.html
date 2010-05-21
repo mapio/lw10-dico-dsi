@@ -1,0 +1,25 @@
+<body onload="init()">
+<h1>Shell</h1>
+<div id="output"></div>
+<div><textarea id="input" class="input" wrap="off" onkeydown="inputKeydown( event )" rows="1"></textarea></div>
+<div>
+	<p>Features:</p>
+	<ul> 
+	<li>autocompletion of property names with Tab,</li>
+	<li>multiline input with Shift+Enter,</li>
+	<li>input history with (Ctrl+) Up/Down,</li> 
+	<li><a accesskey="M" href="javascript:go('scope(Math); mathHelp();');" title="Accesskey: M">Math</a>,</li>
+	<li><a accesskey="H" href="http://www.squarefree.com/shell/?ignoreReferrerFrom=shell1.4"  title="Accesskey: H">help</a>.</li>
+	</ul>
+	<p>Values and functions:</p>
+	<ul>
+	<li>ans,</li>
+	<li>print(string),</li>
+	<li><a accesskey="P" href="javascript:go('props(ans)')" title="Accesskey: P">props(object)</a>,</li>
+	<li><a accesskey="B" href="javascript:go('blink(ans)')" title="Accesskey: B">blink(node)</a>,</li>
+	<li><a accesskey="C" href="javascript:go('clear()')" title="Accesskey: C">clear()</a>,</li>
+	<li>load(scriptURL),</li>
+	<li>scope(object).</li>
+	</ul>
+</div>
+</body>
