@@ -10,9 +10,9 @@ Dopo aver fatto
 
 	hg clone https://mapio@bitbucket.org/mapio/lw09-dico-dsi
 
-basta fare::
+basta fare:
 
-	cp data-example.zip
+	cp data-example.zip data.zip
 	./run
 
 e (dovrebbe) partire un server web le cui URL vive sono
