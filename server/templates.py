@@ -22,7 +22,8 @@ BASIC_CSS = '/static/basic.css'
 
 Template = namedtuple( 'Template', 'title body_template js css' )
 
-__templates = {
+ALL = {
+	'home': Template( 'Home', 'home', None, None ),
 	'upload': Template( 'Upload', 'upload', None, None ),
 	'metadata': Template( 'Annota aggiungendo metadati', 'metadata', None, None ),
 	'confirm': Template( 'Conferma', 'confirm', None, None ),
@@ -32,12 +33,14 @@ __templates = {
 	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 }
 
+APPS = [ 'somma', 'semplice' ]
+
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
 base_template.t = resources.load_template( 'base' )
 
 def html( name, **kwargs ):
-	t = __templates[ name ]
+	t = ALL[ name ]
 	j = '\n\t'.join
 	js = j( '<script type="text/javascript" src="{0}"></script>'.format( _ ) for _ in t.js ) if t.js else ''
 	css = j( '<link rel="stylesheet" type="text/css" href="{0}" />'.format( _ ) for _ in t.css ) if t.css else ''

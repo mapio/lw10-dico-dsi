@@ -47,6 +47,12 @@ def handle_halt():
 	halt()
 	return http( 200, 'Server halted.' )
 
+def handle_home():
+	apps = []
+	for k in templates.APPS:
+		apps.append( '<li>{0}: <a href="http://localhost:8000/edit/{1}">edit</a>, <a href="http://localhost:8000/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
+	return html( 'home', apps = '\n'.join( apps ) )
+	
 def handle_img():
 	req = request_uri_parts[ 0 ]
 	if req == 'metadata':
@@ -108,7 +114,8 @@ def application( environ, start_response ):
 	try:
 		application = request_uri_parts.pop( 0 )
 	except IndexError:
-		return http( 400, 'No application specified (uri {0})'.format( request_uri ) )
+		#return http( 400, 'No application specified (uri {0})'.format( request_uri ) )
+		return handle_home()
 	try:
 		handle = globals()[ 'handle_' + application ]
 	except KeyError:
