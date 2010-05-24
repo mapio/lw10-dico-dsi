@@ -30,7 +30,7 @@ if __name__ == '__main__':
 	ROOT_LOGGER.addHandler( ch )
 	
 	simple_server = make_server( 'localhost', 8000, server.application )	
-	LOGGER.info( "Serving on http://localhost:8000/{tag,shell,edit,run}" )
+	ROOT_LOGGER.info( "Serving on http://localhost:8000/{tag,shell,edit,run}" )
 	try:
 		while not server.stop: simple_server.handle_request()
 	except KeyboardInterrupt:
