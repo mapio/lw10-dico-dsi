@@ -38,5 +38,10 @@ per arrestare il server (viene anche trap-pato anche ctrl-c, ma potrebbe
 essere che non esca pultio e sputtanti data.zip, sempre meglio fermarlo con
 l'URL qui sopra):
 
+Dovrebbe esserci una sorta di menù di quanto sopra aprendo l'applicazione alla
+root:
+
+	http://localhost:8000/
+
 Non c'è logging e gestione dell'errore, o ripulitura dell'input dell'utente…
 prima di darlo in mano agli studenti va molto ripulito.
