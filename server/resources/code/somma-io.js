@@ -15,7 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-function somma() {
-	var form = document.forms['somma'];
-	form.ris.value = parseInt( form.op1.value ) + parseInt( form.op2.value );
+// init è chiamato dall'onload di body
+
+function init() {
+	input_ints( 2 ); // aggiunge due campi "int" alla form
+	input_strings( 2 ); // aggiunge due campi "string" alla form
+}
+
+// main è chiamato dall'onclick del bottone della form
+
+function main( input ) {
+	output( input[ 0 ] + input[ 1 ] );
+	output( input[ 2 ] + input[ 3 ] );
 }

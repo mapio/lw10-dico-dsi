@@ -18,6 +18,7 @@ from collections import namedtuple
 import resources
 
 GMAP_JS = 'http://maps.google.com/maps/api/js?sensor=false'
+IO_JS = '/static/io.js'
 BASIC_CSS = '/static/basic.css'
 
 Template = namedtuple( 'Template', 'title body_template js css' )
@@ -30,10 +31,11 @@ ALL = {
 	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ BASIC_CSS ] ),
 	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
 	'somma': Template( 'Somma', 'somma', [ '/edit/somma/load' ], None ),
+	'somma-io': Template( 'Somma (con libreria I/O)', 'io', [ '/edit/somma-io/load', IO_JS ], None ),
 	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 }
 
-APPS = [ 'somma', 'semplice' ]
+APPS = [ 'somma', 'somma-io', 'semplice' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
