@@ -1,0 +1,25 @@
+<body>
+<form id="coordinate">
+A <input type="text" id="latA" /> , 
+<input type="text" id="longA" /> <br/>
+B <input type="text" id="latB" /> , 
+<input type="text" id="longB" /> <br/>
+
+<input type="button" value="calcola" onclick="distanza()"/> <br/>
+
+d = R*sqrt(deltaLat^2 + deltaLong^2) (in radianti)
+<input type="text" readonly name="ris-pyth1"/> 
+
+<br/>
+d = R*sqrt(deltaLat^2 + cos(latMedia)*deltaLong^2) (in radianti)
+<input type="text" readonly name="ris-pyth2"/> 
+
+<br/>
+Greater circle
+<input type="text" readonly name="ris-gcircle"/> 
+
+</form>
+
+
+
+</body>

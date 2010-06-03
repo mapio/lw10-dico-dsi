@@ -19,6 +19,7 @@ import resources
 
 GMAP_JS = 'http://maps.google.com/maps/api/js?sensor=false'
 IO_JS = '/static/io.js'
+COORD_JS = '/edit/coord/load' # Questa libreria puo` essere cambiata dall'utente
 BASIC_CSS = '/static/basic.css'
 
 Template = namedtuple( 'Template', 'title body_template js css' )
@@ -32,10 +33,14 @@ ALL = {
 	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
 	'somma': Template( 'Somma', 'somma', [ '/edit/somma/load' ], None ),
 	'somma-io': Template( 'Somma (con libreria I/O)', 'io', [ '/edit/somma-io/load', IO_JS ], None ),
+	'coord': Template( 'Operazioni con le coordinate geografiche', 'coord', [ '/edit/coord/load' ], None ),
 	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
+	'semplice-dist': Template( 'Una semplice mappa con distanze', 'basicmap', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], [ BASIC_CSS ] ),
+
+
 }
 
-APPS = [ 'somma', 'somma-io', 'semplice' ]
+APPS = [ 'somma', 'somma-io', 'semplice', 'semplice-dist', 'coord' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
