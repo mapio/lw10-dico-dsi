@@ -54,8 +54,9 @@ function _main() {
 	var input = Array();
 	var inputs = document.getElementsByTagName( 'input' );
 	for ( i = 0; i < inputs.length; i++ ) {
-		input[ i ] = inputs[ i ].value;
-		if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] -= 0;
+	    input[ i ] = inputs[ i ].value;
+	    if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] = parseInt(input[i]);
+	    if ( inputs[ i ].getAttribute( 'class' ) == 'float' ) input[ i ] = parseFloat(input[i]);
 	}
 	var output = document.getElementById( 'output' );
 	output.value = '';
@@ -96,9 +97,14 @@ function input_strings( n, labels ) {
 	_input( n, 'string', labels );
 }
 
-function output( str ) {
-	var output = document.getElementById( 'output' );
-	output.value += str + '\n';
+function input_floats( n, labels ) {
+	_input( n, 'float', labels );
+}
+
+
+function output( str, label ) {
+    var output = document.getElementById( 'output' );
+    output.value += (label === undefined ? '' : label) + str + '\n';
 }
 
 function marker( point, title, description, src ) {
