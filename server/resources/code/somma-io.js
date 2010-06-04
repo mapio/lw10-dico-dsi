@@ -18,8 +18,8 @@
 // init è chiamato dall'onload di body
 
 function init() {
-	input_ints( 2 ); // aggiunge due campi "int" alla form
-	input_strings( 2 ); // aggiunge due campi "string" alla form
+    input_ints( 2, "addendo:" ); // aggiunge due campi "int" alla form
+    input_strings( 2 ); // aggiunge due campi "string" alla form
 }
 
 // main è chiamato dall'onclick del bottone della form

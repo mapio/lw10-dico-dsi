@@ -15,22 +15,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-function _input( n, k ) {
+function _input( n, k, label ) {
 	var input = document.getElementById( 'input' );
 	for ( i = 0; i < n; i++ ) {
-		var ctrl = document.createElement( 'input' );
-		ctrl.setAttribute( 'type', 'text' );
-		ctrl.setAttribute( 'class', k );
+	    var ctrl = document.createElement( 'input' );
+	    ctrl.setAttribute( 'type', 'text' );
+	    ctrl.setAttribute( 'class', k );
+	    if (label === undefined)
 		input.appendChild( ctrl );
+	    else {
+		var lab = document.createElement( 'label' );
+	        lab.textContent = label;
+		lab.appendChild(ctrl);
+		input.appendChild( lab );
+	    }
 	}
 }
 
-function input_ints( n ) {
-	_input( n, 'int' );
+
+/* Optional label parameter sets the label of the input element */
+function input_ints( n, label ) {
+    _input( n, 'int', label );
 }
 
-function input_strings( n ) {
-	_input( n, 'string' );
+function input_strings( n, label ) {
+    _input( n, 'string', label );
 }
 
 function output( str ) {
