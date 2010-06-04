@@ -1,0 +1,11 @@
+<body>
+<h1>Annota aggiungendo metadati</h1>
+<img height="400" width="400" src="/img/$num" />
+<img src="http://maps.google.com/maps/api/staticmap?center=$lat,$lon&amp;zoom=15&amp;size=400x400&amp;sensor=false&amp;markers=color:blue|$lat,$lon" />
+<form method="post" enctype="multipart/form-data" action="/tag/metadata/$num">
+<p><label for="creator">Autore: </label> <input type="text" name="creator" /></p>
+<p><label for="name">Titolo: </label> <input type="text" name="name" /></p>
+<p><label for="description">Descrizione: </label> <textarea rows="2" cols="20" name="description"></textarea></p>
+<p><input type="submit" value="Annota" name="submit_field" /></p>
+</form>
+</body>
