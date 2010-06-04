@@ -25,6 +25,9 @@ function init() {
 // main è chiamato dall'onclick del bottone della form
 
 function main( input ) {
+	init_map();
+	p = new Point( 45.477822, 9.169501 );
+	marker( p );
 	output( input[ 0 ] + input[ 1 ] );
 	output( input[ 2 ] + input[ 3 ] );
 }

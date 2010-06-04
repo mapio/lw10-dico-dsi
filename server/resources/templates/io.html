@@ -2,10 +2,13 @@
 	<form method="post" action="#">
 		<fieldset><legend>Input</legend>
 			<div id="input"></div>
+			<div><input type="button" value="esegui il programma" onclick="_main()"/></div>	
 		</fieldset>
 		<fieldset><legend>Output</legend>
-			<textarea id='output' cols='60' rows='10' readonly='true' ></textarea>
+			<textarea id='output' cols='60' rows='10' readonly='readonly' ></textarea>
 		</fieldset>
-		<input type="button" value="esegui il programma" onclick="_main()"/>
+		<fieldset id="mapfs" style="display: none"><legend>Map</legend>
+			<div id="map" style="height: 200px; width:400px; border: 1px solid black;"></div>
+		</fieldset>
 	</form>
 </body>

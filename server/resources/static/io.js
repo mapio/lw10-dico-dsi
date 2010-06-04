@@ -64,3 +64,32 @@ function _main() {
 	output.value = '';
 	main( input );
 }
+
+// Functions to use Google maps
+
+var map = null; // after init_map this will be the Google map object
+var Point = null; // after init_map this will be google.maps.LatLng
+
+/**
+	Inits the Google map object (and Point function) after makeing the 
+	fieldsef of id 'mapfs' (that contains the map div) visible.
+*/
+function init_map( lat, lng ) {
+	if ( typeof google === 'undefined' ) return;
+	if ( lat === undefined ) {
+		lat = 45.477822;
+		lng = 9.169501;
+	}
+	document.getElementById( 'mapfs' ).style.display = 'block';
+	map = new google.maps.Map( document.getElementById( 'map' ), {
+		zoom: 13,
+		center: new google.maps.LatLng( lat, lng ),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	} );
+	Point = google.maps.LatLng;
+}
+
+function marker( point, title ) {
+	if ( ! map ) return;
+	var marker = new google.maps.Marker( { position: point, map: map, title: title } );
+}
