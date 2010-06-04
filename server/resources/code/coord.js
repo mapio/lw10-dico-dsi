@@ -1,23 +1,19 @@
-function distanza(){
-    var form = document.forms['coordinate'];
-
-    form['ris-pyth1'].value = pyth1(parseFloat(form['latA'].value),
-				    parseFloat(form['longA'].value),
-				    parseFloat(form['latB'].value),
-				    parseFloat(form['longB'].value)).toFixed();
-
-    form['ris-pyth2'].value = pyth2(parseFloat(form['latA'].value),
-				    parseFloat(form['longA'].value),
-				    parseFloat(form['latB'].value),
-				    parseFloat(form['longB'].value)).toFixed();
+function init(){
+    for (var i=0; i<2 ; i++){
+	input_floats(1, " Latitudine" + (i+1));
+	input_floats(1, " Longitudine" + (i+1));
+    }
+}
 
 
-    form['ris-gcircle'].value = gcircle(parseFloat(form['latA'].value),
-				    parseFloat(form['longA'].value),
-				    parseFloat(form['latB'].value),
-				    parseFloat(form['longB'].value)).toFixed();
 
 
+function main(input) {
+    output(pyth1(input[0], input[1], input[2], input[3]).toFixed(), 
+	   "d = R*sqrt(deltaLat^2 + deltaLong^2) (in radianti): ");
+    output(pyth2(input[0], input[1], input[2], input[3]).toFixed(), 
+	   "d = R*sqrt(deltaLat^2 + cos(latMedia)*deltaLong^2) (in radianti): ");
+    output(gcircle(input[0], input[1], input[2], input[3]).toFixed(), "Greater circle:  ");
 }
 
 const R = 6371009;

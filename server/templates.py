@@ -33,7 +33,7 @@ ALL = {
 	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
 	'somma': Template( 'Somma', 'io', [ '/edit/somma/load', IO_JS ], None ),
 	'marker': Template( 'Marker', 'io', [ '/edit/marker/load', IO_JS, GMAP_JS ], None ),
-	'coord': Template( 'Operazioni con le coordinate geografiche', 'coord', [ '/edit/coord/load' ], None ),
+	'coord': Template( 'Operazioni con le coordinate geografiche', 'io', [ '/edit/coord/load', IO_JS ], None ),
 	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 	'semplice-dist': Template( 'Una semplice mappa con distanze', 'basicmap', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], [ BASIC_CSS ] ),
 
