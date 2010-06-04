@@ -19,15 +19,12 @@
 
 function init() {
 	input_ints( 2, [ "primo addendo", "secondo addendo" ] ); // aggiunge due campi "int" alla form
-	input_strings( 2 ); // aggiunge due campi "string" alla form
+	input_strings( 2, [ "prima parola", "seconda parola" ] ); // aggiunge due campi "string" alla form
 }
 
 // main è chiamato dall'onclick del bottone della form
 
 function main( input ) {
-	init_map();
-	p = new Point( 45.477822, 9.169501 );
-	marker( p );
 	output( input[ 0 ] + input[ 1 ] );
 	output( input[ 2 ] + input[ 3 ] );
 }

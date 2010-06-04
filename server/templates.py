@@ -31,8 +31,8 @@ ALL = {
 	'confirm': Template( 'Conferma', 'confirm', None, None ),
 	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ BASIC_CSS ] ),
 	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
-	'somma': Template( 'Somma', 'somma', [ '/edit/somma/load' ], None ),
-	'somma-io': Template( 'Somma (con libreria I/O)', 'io', [ '/edit/somma-io/load', IO_JS, GMAP_JS ], None ),
+	'somma': Template( 'Somma', 'io', [ '/edit/somma/load', IO_JS ], None ),
+	'marker': Template( 'Marker', 'io', [ '/edit/marker/load', IO_JS, GMAP_JS ], None ),
 	'coord': Template( 'Operazioni con le coordinate geografiche', 'coord', [ '/edit/coord/load' ], None ),
 	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
 	'semplice-dist': Template( 'Una semplice mappa con distanze', 'basicmap', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], [ BASIC_CSS ] ),
@@ -40,7 +40,7 @@ ALL = {
 
 }
 
-APPS = [ 'somma', 'somma-io', 'semplice', 'semplice-dist', 'coord' ]
+APPS = [ 'somma', 'marker', 'semplice', 'semplice-dist', 'coord' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )

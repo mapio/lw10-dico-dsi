@@ -15,6 +15,52 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
+var map = null; // after _init_map this will be the Google map object
+var Point = null; // after _init_map this will be google.maps.LatLng
+
+/**
+	Inits the Google map object (and Point function) after makeing the 
+	fieldsef of id 'mapfs' (that contains the map div) visible.
+*/
+function _init_map( lat, lng ) {
+	if ( map ) return;
+	if ( lat === undefined ) {
+		lat = 45.477822;
+		lng = 9.169501;
+	}
+	document.getElementById( 'mapfs' ).style.display = 'block';
+	map = new google.maps.Map( document.getElementById( 'map' ), {
+		zoom: 13,
+		center: new google.maps.LatLng( lat, lng ),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	} );
+	Point = google.maps.LatLng;
+}
+
+/**
+	If the google object is defined, it initializes the map and then calls the user init function.
+*/
+function _init() {
+	if ( typeof google != 'undefined' ) _init_map();
+	init()
+}
+
+/**
+	Called by 'onclick' by the button in the input fieldset, collects inputs and passes them
+	to the user main function.
+*/
+function _main() {
+	var input = Array();
+	var inputs = document.getElementsByTagName( 'input' );
+	for ( i = 0; i < inputs.length; i++ ) {
+		input[ i ] = inputs[ i ].value;
+		if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] -= 0;
+	}
+	var output = document.getElementById( 'output' );
+	output.value = '';
+	main( input );
+}
+
 /**
 	Adds to the element of id 'input' a 'p' element containing n 'label' elements each one 
 	containing an 'input' element of type k (stored as a string in the class attribute);
@@ -51,42 +97,6 @@ function input_strings( n, labels ) {
 function output( str ) {
 	var output = document.getElementById( 'output' );
 	output.value += str + '\n';
-}
-
-function _main() {
-	var input = Array();
-	var inputs = document.getElementsByTagName( 'input' );
-	for ( i = 0; i < inputs.length; i++ ) {
-		input[ i ] = inputs[ i ].value;
-		if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] -= 0;
-	}
-	var output = document.getElementById( 'output' );
-	output.value = '';
-	main( input );
-}
-
-// Functions to use Google maps
-
-var map = null; // after init_map this will be the Google map object
-var Point = null; // after init_map this will be google.maps.LatLng
-
-/**
-	Inits the Google map object (and Point function) after makeing the 
-	fieldsef of id 'mapfs' (that contains the map div) visible.
-*/
-function init_map( lat, lng ) {
-	if ( typeof google === 'undefined' ) return;
-	if ( lat === undefined ) {
-		lat = 45.477822;
-		lng = 9.169501;
-	}
-	document.getElementById( 'mapfs' ).style.display = 'block';
-	map = new google.maps.Map( document.getElementById( 'map' ), {
-		zoom: 13,
-		center: new google.maps.LatLng( lat, lng ),
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	} );
-	Point = google.maps.LatLng;
 }
 
 function marker( point, title ) {
