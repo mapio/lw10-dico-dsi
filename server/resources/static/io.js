@@ -40,7 +40,6 @@ function _input( n, k, labels ) {
 	input.appendChild( para );
 }
 
-/* Optional labels parameter array sets the label of the input element */
 function input_ints( n, labels ) {
 	_input( n, 'int', labels );
 }
@@ -56,10 +55,12 @@ function output( str ) {
 
 function _main() {
 	var input = Array();
-	var inputs = document.getElementById( 'input' ).childNodes;
+	var inputs = document.getElementsByTagName( 'input' );
 	for ( i = 0; i < inputs.length; i++ ) {
 		input[ i ] = inputs[ i ].value;
 		if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] -= 0;
 	}
+	var output = document.getElementById( 'output' );
+	output.value = '';
 	main( input );
 }
