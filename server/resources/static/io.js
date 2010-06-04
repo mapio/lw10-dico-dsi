@@ -15,37 +15,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-function _input( n, k, label ) {
-	var input = document.getElementById( 'input' );
+/**
+	Adds to the element of id 'input' a 'p' element containing n 'label' elements each one 
+	containing an 'input' element of type k (stored as a string in the class attribute);
+	if the optional parameter labels is defined it will be used to label input controls, more precisely
+	if it is an array, then labels[ i ] (if defined) will be added as the text of the 'label' element
+	enclosing i-th input; if n is 1 labels can be either an array of size one, or a string.
+*/
+function _input( n, k, labels ) {
+	var input = document.getElementById( 'input' );	
+	if ( n === 1 && typeof labels === 'string' ) labels = [ labels ];
+	var para = document.createElement( 'p' )
 	for ( i = 0; i < n; i++ ) {
-	    var ctrl = document.createElement( 'input' );
-	    ctrl.setAttribute( 'type', 'text' );
-	    ctrl.setAttribute( 'class', k );
-	    if (label === undefined)
-		input.appendChild( ctrl );
-	    else {
+		var ctrl = document.createElement( 'input' );
+		ctrl.setAttribute( 'type', 'text' );
+		ctrl.setAttribute( 'class', k );
 		var lab = document.createElement( 'label' );
-	        lab.textContent = label;
-		lab.appendChild(ctrl);
-		input.appendChild( lab );
-	    }
+		if ( ! ( labels === undefined || labels[ i ] === undefined ) )
+			lab.appendChild( document.createTextNode( labels[ i ] + ': ' ) );
+		lab.appendChild( ctrl );
+		if ( i != n - 1 ) lab.appendChild( document.createTextNode( ', ' ) );
+		para.appendChild( lab );
 	}
+	input.appendChild( para );
 }
 
-
-/* Optional label parameter sets the label of the input element */
-function input_ints( n, label ) {
-    _input( n, 'int', label );
+/* Optional labels parameter array sets the label of the input element */
+function input_ints( n, labels ) {
+	_input( n, 'int', labels );
 }
 
-function input_strings( n, label ) {
-    _input( n, 'string', label );
+function input_strings( n, labels ) {
+	_input( n, 'string', labels );
 }
 
 function output( str ) {
 	var output = document.getElementById( 'output' );
 	output.value += str + '\n';
 }
+
 function _main() {
 	var input = Array();
 	var inputs = document.getElementById( 'input' ).childNodes;
