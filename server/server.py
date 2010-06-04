@@ -49,7 +49,7 @@ def handle_halt():
 
 def handle_home():
 	apps = []
-	for k in templates.APPS:
+	for k in templates.USER_APPS:
 		apps.append( '<li>{0}: <a href="http://localhost:8000/edit/{1}">edit</a>, <a href="http://localhost:8000/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
 	return html( 'home', apps = '\n'.join( apps ) )
 	

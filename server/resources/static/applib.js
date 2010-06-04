@@ -28,7 +28,8 @@ function _init_map( lat, lng ) {
 		lat = 45.477822;
 		lng = 9.169501;
 	}
-	document.getElementById( 'mapfs' ).style.display = 'block';
+	var mapfs = document.getElementById( 'mapfs' );
+	if ( mapfs ) mapfs.style.display = 'block';
 	map = new google.maps.Map( document.getElementById( 'map' ), {
 		zoom: 13,
 		center: new google.maps.LatLng( lat, lng ),
@@ -58,6 +59,7 @@ function _main() {
 	}
 	var output = document.getElementById( 'output' );
 	output.value = '';
+	// if map is defined we should re-init it!
 	main( input );
 }
 
@@ -77,7 +79,7 @@ function _input( n, k, labels ) {
 		ctrl.setAttribute( 'type', 'text' );
 		ctrl.setAttribute( 'class', k );
 		var lab = document.createElement( 'label' );
-		if ( ! ( labels === undefined || labels[ i ] === undefined ) )
+		if ( labels !== undefined && labels[ i ] !== undefined )
 			lab.appendChild( document.createTextNode( labels[ i ] + ': ' ) );
 		lab.appendChild( ctrl );
 		if ( i != n - 1 ) lab.appendChild( document.createTextNode( ', ' ) );
@@ -99,7 +101,24 @@ function output( str ) {
 	output.value += str + '\n';
 }
 
-function marker( point, title ) {
+function marker( point, title, description, src ) {
 	if ( ! map ) return;
 	var marker = new google.maps.Marker( { position: point, map: map, title: title } );
+	if ( description !== undefined ) {
+		var content = "<h3>" + title + "</h3><p>" + description + "</p>";
+		if ( src !== undefined )
+			content += "<img src='" + src + "' height=100 width=100/>";
+		var infowindow = new google.maps.InfoWindow( { content: "<div>" + content + "</div>" } );
+		google.maps.event.addListener( marker, 'click', function() {
+			infowindow.open( map, marker );
+		} );
+	}
 }
+
+function loadMetadata() {
+	xhttp = new XMLHttpRequest();
+	xhttp.open( 'GET', '/img/metadata', false );
+	xhttp.send( '' );
+	return xhttp.responseXML;
+}
+

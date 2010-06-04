@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
+/**
     Copyright (C) 2010 Massimo Santini
 
     This program is free software: you can redistribute it and/or modify
@@ -14,13 +13,18 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" style="height: 100%;">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	$js
-	$css
-	<title>$title</title>
-</head>
-$body
-</html>
+**/
+
+function init() {
+	var metadata = loadMetadata();
+	points = metadata.getElementsByTagName('Point');
+	for ( var i = 0; i < points.length ; i++ ) disegna( points[ i ] );
+}
+
+function disegna( point ) {
+	lat_lng = point.firstChild.firstChild.nodeValue.split( ',' );
+	title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
+	description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
+	src = "/img/" + parseInt( point.parentNode.attributes.getNamedItem('xml:id').value.split( '_' )[ 1 ] );
+	marker( new Point( lat_lng[ 0 ], lat_lng[ 1 ] ), title, description, src );
+}

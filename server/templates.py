@@ -18,29 +18,28 @@ from collections import namedtuple
 import resources
 
 GMAP_JS = 'http://maps.google.com/maps/api/js?sensor=false'
-IO_JS = '/static/io.js'
+APPLIB_JS = '/static/applib.js'
 COORD_JS = '/edit/coord/load' # Questa libreria puo` essere cambiata dall'utente
-BASIC_CSS = '/static/basic.css'
 
 Template = namedtuple( 'Template', 'title body_template js css' )
 
 ALL = {
+# system apps
 	'home': Template( 'Home', 'home', None, None ),
 	'upload': Template( 'Upload', 'upload', None, None ),
 	'metadata': Template( 'Annota aggiungendo metadati', 'metadata', None, None ),
 	'confirm': Template( 'Conferma', 'confirm', None, None ),
-	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ BASIC_CSS ] ),
-	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ BASIC_CSS, '/static/shell.css' ] ),
-	'somma': Template( 'Somma', 'io', [ '/edit/somma/load', IO_JS ], None ),
-	'marker': Template( 'Marker', 'io', [ '/edit/marker/load', IO_JS, GMAP_JS ], None ),
+	'edit': Template( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ '/static/edit.css' ] ),
+	'shell': Template( 'Shell', 'shell', [ '/static/shell.js' ], [ '/static/shell.css' ] ),
+# user apps (examples)
+	'somma': Template( 'Somma', 'io', [ APPLIB_JS, '/edit/somma/load' ], None ),
+	'marker': Template( 'Marker', 'io', [ GMAP_JS, APPLIB_JS, '/edit/marker/load' ], None ),
+	'mappa': Template( 'Mappa', 'map', [ GMAP_JS, APPLIB_JS, '/edit/mappa/load' ], None ),
+	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], None ),
 	'coord': Template( 'Operazioni con le coordinate geografiche', 'coord', [ '/edit/coord/load' ], None ),
-	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
-	'semplice-dist': Template( 'Una semplice mappa con distanze', 'basicmap', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], [ BASIC_CSS ] ),
-
-
 }
 
-APPS = [ 'somma', 'marker', 'semplice', 'semplice-dist', 'coord' ]
+USER_APPS = [ 'somma', 'marker', 'mappa', 'semplice-dist', 'coord' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
