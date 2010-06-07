@@ -25,6 +25,6 @@ function disegna( point ) {
 	lat_lng = point.firstChild.firstChild.nodeValue.split( ',' );
 	title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
 	description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
-	src = "/img/" + parseInt( point.parentNode.attributes.getNamedItem('xml:id').value.split( '_' )[ 1 ] );
+	src = '/img/' + parseInt( point.parentNode.attributes.getNamedItem( 'xml:id' ).value.split( '_' )[ 1 ] );
 	marker( new Point( lat_lng[ 0 ], lat_lng[ 1 ] ), title, description, src );
 }

@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2010 Massimo Santini
+    Copyright (C) 2010 Massimo Santini, Mattia Monga
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -106,13 +106,16 @@ function output( str, label ) {
     output.value += (label === undefined ? '' : label) + str + '\n';
 }
 
-function marker( point, title, description, src ) {
+function marker( point, title, description, src, extra ) {
+	alert( title );
 	if ( ! map ) return;
 	var marker = new google.maps.Marker( { position: point, map: map, title: title } );
 	if ( description !== undefined ) {
 		var content = "<h3>" + title + "</h3><p>" + description + "</p>";
 		if ( src !== undefined )
 			content += "<img src='" + src + "' height=100 width=100/>";
+		if ( extra !== undefined )
+			content += extra;
 		var infowindow = new google.maps.InfoWindow( { content: "<div>" + content + "</div>" } );
 		google.maps.event.addListener( marker, 'click', function() {
 			infowindow.open( map, marker );
