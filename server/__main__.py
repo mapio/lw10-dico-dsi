@@ -28,13 +28,7 @@ if __name__ == '__main__':
 	ch.setLevel( DEBUG )
 	ch.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
 	ROOT_LOGGER.addHandler( ch )
-	
-	# import rlcompleter
-	# import readline
-	# from code import InteractiveConsole
-	# c = InteractiveConsole()
-	# c.interact()
-	
+
 	simple_server = make_server( 'localhost', 8000, server.application )	
 	ROOT_LOGGER.info( "Serving on http://localhost:8000/{tag,shell,edit,run}" )
 	try:
