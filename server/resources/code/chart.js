@@ -16,15 +16,13 @@
 **/
 
 function init() {
-	var metadata = loadMetadata();
-	var points = metadata.getElementsByTagName('Point');
-	for ( var i = 0; i < points.length ; i++ ) disegna( points[ i ] );
+	input_ints( 1, 'Numero di punti' );
 }
 
-function disegna( point ) {
-	var lat_lng = point.firstChild.firstChild.nodeValue.split( ',' );
-	var title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
-	var description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
-	var src = '/img/' + parseInt( point.parentNode.attributes.getNamedItem( 'xml:id' ).value.split( '_' )[ 1 ] );
-	marker( new Point( lat_lng[ 0 ], lat_lng[ 1 ] ), title, description, src );
+function main( input ) {
+	var data = new Table();
+	data.addColumn( 'number', 'linea' );
+	data.addColumn( 'number', 'parabola' );
+	for ( var i = 0; i < input[ 0 ]; i++ ) data.addRow( [ i, i * i ] );
+	draw( data );
 }

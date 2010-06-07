@@ -17,13 +17,13 @@
 
 function init() {
 	var metadata = loadMetadata();
-	points = metadata.getElementsByTagName('Point');
+	var points = metadata.getElementsByTagName('Point');
 	for ( var i = 0; i < points.length ; i++ ) {
-		point = points[ i ];
-		lat_lng = point.firstChild.firstChild.nodeValue.split( ',' );
-		title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
-		description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
-		src = '/img/' + parseInt( point.parentNode.attributes.getNamedItem( 'xml:id' ).value.split( '_' )[ 1 ] );		
+		var point = points[ i ];
+		var lat_lng = point.firstChild.firstChild.nodeValue.split( ',' );
+		var title = point.parentNode.getElementsByTagName( 'name' )[ 0 ].firstChild.nodeValue;
+		var description = point.parentNode.getElementsByTagName( 'description' )[ 0 ].firstChild.nodeValue;
+		var src = '/img/' + parseInt( point.parentNode.attributes.getNamedItem( 'xml:id' ).value.split( '_' )[ 1 ] );		
 		var ltA = parseFloat( lat_lng[ 0 ] );
 		var lgA = parseFloat( lat_lng[ 1 ] );
 		var s = '';
