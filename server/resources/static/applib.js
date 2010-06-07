@@ -15,8 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-var map = null; // after _init_map this will be the Google map object
+var map = null; // after _init_map this will be instantiated as a google.maps.Map
 var Point = null; // after _init_map this will be google.maps.LatLng
+var Table = null; // after _init_chart this will be instantiatend as a google.visualization.DataTable
 
 /**
 	Inits the Google map object (and Point function) after makeing the 
@@ -24,6 +25,7 @@ var Point = null; // after _init_map this will be google.maps.LatLng
 */
 function _init_map( lat, lng ) {
 	if ( map ) return;
+	if ( typeof google.maps == 'undefined' ) return;
 	if ( lat === undefined ) {
 		lat = 45.477822;
 		lng = 9.169501;
@@ -38,12 +40,22 @@ function _init_map( lat, lng ) {
 	Point = google.maps.LatLng;
 }
 
+function _init_chart() {
+	if ( typeof google.visualization == 'undefined' ) return;
+	var chartfs = document.getElementById( 'chartfs' );
+	if ( chartfs ) chartfs.style.display = 'block';
+	Table = google.visualization.DataTable;
+}
+
 /**
 	If the google object is defined, it initializes the map and then calls the user init function.
 */
 function _init() {
-	if ( typeof google != 'undefined' ) _init_map();
-	init()
+	if ( typeof google != 'undefined' ) {
+		_init_map();
+		_init_chart();
+	}
+	init();
 }
 
 /**
@@ -75,7 +87,7 @@ function _input( n, k, labels ) {
 	var input = document.getElementById( 'input' );	
 	if ( n === 1 && typeof labels === 'string' ) labels = [ labels ];
 	var para = document.createElement( 'p' )
-	for ( i = 0; i < n; i++ ) {
+	for ( var i = 0; i < n; i++ ) {
 		var ctrl = document.createElement( 'input' );
 		ctrl.setAttribute( 'type', 'text' );
 		ctrl.setAttribute( 'class', k );
@@ -123,8 +135,13 @@ function marker( point, title, description, src, extra ) {
 	}
 }
 
+function draw( data ) {
+	var chart = new google.visualization.LineChart( document.getElementById( 'chart' ) );
+	chart.draw( data, { curveType: "none", width: 400, height: 200 } );
+}
+
 function loadMetadata() {
-	xhttp = new XMLHttpRequest();
+	var xhttp = new XMLHttpRequest();
 	xhttp.open( 'GET', '/img/metadata', false );
 	xhttp.send( '' );
 	return xhttp.responseXML;
