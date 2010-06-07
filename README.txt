@@ -6,42 +6,34 @@ girare tutto servono due file, idealmete server.zip contiene il sw e le
 risorse readonly, mentre data.zip è quello che dovrebbe contenere le immagini,
 i metadati e il codice scritto dagli studenti.
 
-Dopo aver fatto 
+Dopo aver fatto
 
 	hg clone https://mapio@bitbucket.org/mapio/lw09-dico-dsi
+
+(o, se non avete Mercurial installato, aver scaricato
+
+	http://bitbucket.org/mapio/lw09-dico-dsi/get/tip.zip
+
+e debitamente scompattato)
 
 basta fare:
 
 	cp data-example.zip data.zip
 	./run
 
-e (dovrebbe) partire un server web le cui URL vive sono
+e (dovrebbe) partire un server web che risponde all'URL
 
-	http://localhost:8000/tag
+	http://localhost:8000/
 
-per upload-are ed annotare le immagini,
+da cui è possibile far partire diverse applicazioni "built-in" e alcuni esempi
+di codice "editabile".
 
-	http://localhost:8000/shell
-
-per eseguire una semplice shell JavaSript,
-
-	http://localhost:8000/edit/<applicazione>
-	http://localhost:8000/run/<applicazione>
-
-per editare ed eseguire le varie applicazioni, al momento ce ne sono due
-"somma" (che fa la somma tra due interi in una form) e "semplice" (che usa
-gmap) e
+Alla fine dell'uso, per arrestare il server fate
 
 	http://localhost:8000/halt
 
-per arrestare il server (viene anche trap-pato anche ctrl-c, ma potrebbe
-essere che non esca pultio e sputtanti data.zip, sempre meglio fermarlo con
-l'URL qui sopra):
-
-Dovrebbe esserci una sorta di menù di quanto sopra aprendo l'applicazione alla
-root:
-
-	http://localhost:8000/
+(viene anche trap-pato anche ctrl-c, ma potrebbe essere che non esca pultio e
+sputtanti data.zip, sempre meglio fermarlo con l'URL qui sopra):
 
 Non c'è logging e gestione dell'errore, o ripulitura dell'input dell'utente…
 prima di darlo in mano agli studenti va molto ripulito.
