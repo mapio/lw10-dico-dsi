@@ -18,7 +18,7 @@
 // init è chiamato dall'onload di body
 
 function init() {
-	input_ints( 2, [ "latitudine", "longitudine" ] );
+	input_floats( 2, [ "latitudine", "longitudine" ] );
 	output( "Prova con le coordinate: 45.477822, 9.169501");
 }
 
