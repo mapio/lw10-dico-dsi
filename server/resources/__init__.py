@@ -65,9 +65,12 @@ def load_metadata():
 		return None
 	return parseString( string )
 
-def load_appsconfig():
-	cp = ConfigParser( { 'a': 'adef' } )
-	cp.readfp( StringIO( __data[ 'userapps.cfg' ] ) )
+def load_userappsconfig():
+	cp = ConfigParser( { 
+		'GMAP_JS': 'http://maps.google.com/maps/api/js?sensor=false',
+		'GCHART_JS': 'http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22packages%22%3A%5B%22linechart%22%5D%7D%5D%7D', # obtained via http://code.google.com/apis/ajax/documentation/autoloader-wizard.html
+	} )
+	cp.readfp( StringIO( __data[ 'userapps.cfg' ].decode( 'utf8' ) ) )
 	return cp
 
 def save_metadata( string ):
