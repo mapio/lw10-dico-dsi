@@ -38,7 +38,7 @@ def handle_edit():
 		return html( 'edit' )
 	action = request_uri_parts.pop( 0 )
 	if action == 'load':
-		return http( 200, resources.load_code( name ) )
+		return http( 200, resources.load_code( name ), content_type = 'text/javascript; charset=utf-8' )
 	elif action == 'save' and request_method == 'POST':
 		resources.save_code( name, post_data[ 'code' ].value )
 		return http( 200 )
