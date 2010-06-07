@@ -35,9 +35,8 @@ ALL = {
 	'somma': Template( 'Somma', 'io', [ APPLIB_JS, '/edit/somma/load' ], None ),
 	'marker': Template( 'Marker', 'io', [ GMAP_JS, APPLIB_JS, '/edit/marker/load' ], None ),
 	'mappa': Template( 'Mappa', 'map', [ GMAP_JS, APPLIB_JS, '/edit/mappa/load' ], None ),
-	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], None ),
 	'coord': Template( 'Operazioni con le coordinate geografiche', 'io', [ '/edit/coord/load', APPLIB_JS ], None ),
-	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], None ),
+	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, APPLIB_JS, '/edit/semplice-dist/load' ], None ),
 }
 
 USER_APPS = [ 'somma', 'marker', 'mappa', 'semplice-dist', 'coord' ]
