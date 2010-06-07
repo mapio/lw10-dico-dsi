@@ -18,8 +18,8 @@
 // init è chiamato dall'onload di body
 
 function init() {
-	input_floats( 2, [ "latitudine", "longitudine" ] );
-	output( "Prova con le coordinate: 45.477822, 9.169501");
+	input_floats( 2, [ 'latitudine', 'longitudine' ] );
+	output( 'Prova con le coordinate: 45.477822, 9.169501' );
 }
 
 // main è chiamato dall'onclick del bottone della form
