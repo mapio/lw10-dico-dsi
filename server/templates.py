@@ -35,13 +35,13 @@ ALL = {
 # user apps (examples)
 	'somma': Template( 'Somma', 'io', [ APPLIB_JS, '/edit/somma/load' ], None ),
 	'marker': Template( 'Marker', 'io', [ GMAP_JS, APPLIB_JS, '/edit/marker/load' ], None ),
-	'chart': Template( 'Grafico', 'io', [ GCHART_JS, APPLIB_JS, '/edit/chart/load' ], None ),
 	'mappa': Template( 'Mappa', 'map', [ GMAP_JS, APPLIB_JS, '/edit/mappa/load' ], None ),
+	'chart': Template( 'Grafico', 'io', [ GCHART_JS, APPLIB_JS, '/edit/chart/load' ], None ),
 	'coord': Template( 'Operazioni con le coordinate geografiche', 'io', [ '/edit/coord/load', APPLIB_JS ], None ),
 	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, APPLIB_JS, '/edit/semplice-dist/load' ], None ),
 }
 
-USER_APPS = [ 'somma', 'marker', 'mappa', 'coord', 'semplice-dist' ]
+USER_APPS = [ 'somma', 'marker', 'mappa', 'chart', 'coord', 'semplice-dist' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
