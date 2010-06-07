@@ -101,7 +101,6 @@ function input_floats( n, labels ) {
 	_input( n, 'float', labels );
 }
 
-
 function output( str, label ) {
     var output = document.getElementById( 'output' );
     output.value += (label === undefined ? '' : label) + str + '\n';
@@ -127,4 +126,3 @@ function loadMetadata() {
 	xhttp.send( '' );
 	return xhttp.responseXML;
 }
-
