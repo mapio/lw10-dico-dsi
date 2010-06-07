@@ -39,7 +39,7 @@ ALL = {
 	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, APPLIB_JS, '/edit/semplice-dist/load' ], None ),
 }
 
-USER_APPS = [ 'somma', 'marker', 'mappa', 'semplice-dist', 'coord' ]
+USER_APPS = [ 'somma', 'marker', 'mappa', 'coord', 'semplice-dist' ]
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )
