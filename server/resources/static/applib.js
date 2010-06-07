@@ -103,12 +103,12 @@ function input_floats( n, labels ) {
 
 function output( str, label ) {
     var output = document.getElementById( 'output' );
-    output.value += (label === undefined ? '' : label) + str + '\n';
+    output.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
 function marker( point, title, description, src, extra ) {
-	alert( title );
 	if ( ! map ) return;
+	if ( title === undefined ) title = '';
 	var marker = new google.maps.Marker( { position: point, map: map, title: title } );
 	if ( description !== undefined ) {
 		var content = "<h3>" + title + "</h3><p>" + description + "</p>";
