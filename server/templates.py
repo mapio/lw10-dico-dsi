@@ -20,7 +20,6 @@ import resources
 GMAP_JS = 'http://maps.google.com/maps/api/js?sensor=false'
 APPLIB_JS = '/static/applib.js'
 COORD_JS = '/edit/coord/load' # Questa libreria puo` essere cambiata dall'utente
-BASIC_CSS = '/static/basic.css'
 
 Template = namedtuple( 'Template', 'title body_template js css' )
 
@@ -38,10 +37,7 @@ ALL = {
 	'mappa': Template( 'Mappa', 'map', [ GMAP_JS, APPLIB_JS, '/edit/mappa/load' ], None ),
 	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], None ),
 	'coord': Template( 'Operazioni con le coordinate geografiche', 'io', [ '/edit/coord/load', APPLIB_JS ], None ),
-	'semplice': Template( 'Una semplice mappa', 'basicmap', [ GMAP_JS, '/edit/semplice/load' ], [ BASIC_CSS ] ),
-	'semplice-dist': Template( 'Una semplice mappa con distanze', 'basicmap', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], [ BASIC_CSS ] ),
-
-
+	'semplice-dist': Template( 'Una semplice mappa con distanze', 'map', [ GMAP_JS, COORD_JS, '/edit/semplice-dist/load' ], None ),
 }
 
 USER_APPS = [ 'somma', 'marker', 'mappa', 'semplice-dist', 'coord' ]
