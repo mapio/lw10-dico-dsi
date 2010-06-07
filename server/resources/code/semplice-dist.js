@@ -15,12 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-function initialize() {
-  var map = new google.maps.Map( document.getElementById( 'map_canvas' ), {
-    zoom: 13,
-    center: new google.maps.LatLng( 45.477822, 9.169501 ),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  } );
+function init() {
   var metadata = loadMetadata();
   points = metadata.getElementsByTagName('Point');
     for ( var i = 0; i < points.length ; i++ ) {
@@ -39,13 +34,6 @@ function initialize() {
 	    addMarker( points[ i ], map, s);
 	}
     }
-}
-
-function loadMetadata() {
-  xhttp = new XMLHttpRequest();
-  xhttp.open( 'GET', '/img/metadata', false );
-  xhttp.send( '' );
-  return xhttp.responseXML;
 }
 
 function addMarker( point, map, dists ) {
