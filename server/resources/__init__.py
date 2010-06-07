@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from ConfigParser import ConfigParser
+from io import StringIO
 from os.path import exists
 from string import Template
 from sys import argv
@@ -62,6 +64,11 @@ def load_metadata():
 	except KeyError:
 		return None
 	return parseString( string )
+
+def load_appsconfig():
+	cp = ConfigParser( { 'a': 'adef' } )
+	cp.readfp( StringIO( __data[ 'userapps.cfg' ] ) )
+	return cp
 
 def save_metadata( string ):
 	__data[ 'img/metadata.kml' ] = string
