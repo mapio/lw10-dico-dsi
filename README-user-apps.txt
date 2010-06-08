@@ -7,9 +7,6 @@ Per creare una "user app" di nome NOME_APP si devono fare i seguenti passi:
 3) aggiungere una sezione NOME_APP che la descriva in
    server/resources/userapps.cfg;
 
-4) aggiungere NOME_APP al campo list della sezione "User Applications" in
-   server/resources/userapps.cfg;
-
 La sezione di descrizione deve contenere i campi "title" e "template" (che
 deve riferirsi al template da usare per il body, eventualmente creato al punto
 1) e opzionalmente il campo "javascript". 
