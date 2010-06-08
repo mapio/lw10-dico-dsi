@@ -146,3 +146,33 @@ function loadMetadata() {
 	xhttp.send( '' );
 	return xhttp.responseXML;
 }
+
+/* A few xpath helpers */
+
+function _nsResolver( prefix ) {  
+	var ns = {  
+		'xml': 'http://www.w3.org/XML/1998/namespace',
+		'kml': 'http://www.opengis.net/kml/2.2',
+		'dc': 'http://dublincore.org/documents/dcmi-namespace/',
+		'foaf': 'http://xmlns.com/foaf/0.1/',
+		'xhtml' : 'http://www.w3.org/1999/xhtml',
+	};  
+	return ns[ prefix ] || null;
+}  
+
+function xpath( data, query ) {
+	var eval_res = data.evaluate( query, data.documentElement, _nsResolver, XPathResult.ANY_TYPE, null );
+	var res = Array();
+	var i;
+	while ( i = eval_res.iterateNext() ) res.push( i );
+	return res;
+}
+
+var _serializer = new XMLSerializer();
+
+function serialize( res ) {
+	if ( ! ( res instanceof Array ) ) return _serializer.serializeToString( res );
+	var str = Array();
+	for ( var i = 0; i < res.length; i++ ) str.push( _serializer.serializeToString( res[ i ] ) );
+	return str;
+}
