@@ -31,7 +31,7 @@ __SYSTEM = {
 ALL = __SYSTEM.copy()
 
 uac = resources.load_userappsconfig()
-USER_APPS = uac.get( 'User Applications', 'list' ).split()
+USER_APPS = uac.sections()
 for app in USER_APPS:
 	js = uac.get( app, 'javascript' ).split() if uac.has_option( app, 'javascript' ) else []
 	js.append( '/static/applib.js' )
