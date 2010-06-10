@@ -62,6 +62,7 @@ function _init() {
 	Called by 'onclick' by the button in the input fieldset, collects inputs and passes them
 	to the user main function.
 */
+var oer;
 function _main() {
 	var input = Array();
 	var inputs = document.getElementsByTagName( 'input' );
@@ -73,7 +74,14 @@ function _main() {
 	var output = document.getElementById( 'output' );
 	output.value = '';
 	// if map is defined we should re-init it!
-	main( input );
+	try {
+		main( input );
+	} catch ( err ) {
+		oer = err;
+		var txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err;
+		error( txt );
+	}
 }
 
 /**
@@ -116,6 +124,11 @@ function input_floats( n, labels ) {
 function output( str, label ) {
     var output = document.getElementById( 'output' );
     output.value += ( label === undefined ? '' : label ) + str + '\n';
+}
+
+function error( str, label ) {
+    var error = document.getElementById( 'error' );
+    error.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
 function marker( point, title, description, src, extra ) {
