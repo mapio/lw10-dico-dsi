@@ -1,3 +1,5 @@
+/* See LIBS.txt for more info about this file. */
+
 var 
 histList = [""], 
 histPos = 0, 
