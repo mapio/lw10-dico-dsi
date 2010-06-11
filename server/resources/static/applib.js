@@ -19,6 +19,7 @@
 var map = null; // after _init_map this will be instantiated as a google.maps.Map
 var Point = null; // after _init_map this will be google.maps.LatLng
 var Table = null; // after _init_chart this will be instantiatend as a google.visualization.DataTable
+var errorta, outputta; // the error and output text areas;
 
 /**
 	Inits the Google map object (and Point function) after makeing the 
@@ -56,6 +57,8 @@ function _init() {
 		_init_map();
 		_init_chart();
 	}
+	outputta = document.getElementById( 'output' );
+	errorta = document.getElementById( 'error' );
 	init();
 }
 
@@ -63,7 +66,7 @@ function _init() {
 	Called by 'onclick' by the button in the input fieldset, collects inputs and passes them
 	to the user main function.
 */
-var oer;
+
 function _main() {
 	var input = Array();
 	var inputs = document.getElementsByTagName( 'input' );
@@ -72,8 +75,8 @@ function _main() {
 	    if ( inputs[ i ].getAttribute( 'class' ) == 'int' ) input[ i ] = parseInt(input[i]);
 	    if ( inputs[ i ].getAttribute( 'class' ) == 'float' ) input[ i ] = parseFloat(input[i]);
 	}
-	var output = document.getElementById( 'output' );
-	output.value = '';
+	outputta.value = '';
+	errorta.value = '';
 	// if map is defined we should re-init it!
 	try {
 		main( input );
@@ -93,7 +96,6 @@ function _main() {
 	enclosing i-th input; if n is 1 labels can be either an array of size one, or a string.
 */
 function _input( n, k, labels ) {
-	var input = document.getElementById( 'input' );	
 	if ( n === 1 && typeof labels === 'string' ) labels = [ labels ];
 	var para = document.createElement( 'p' )
 	for ( var i = 0; i < n; i++ ) {
@@ -108,7 +110,7 @@ function _input( n, k, labels ) {
 		if ( i != n - 1 ) lab.appendChild( document.createTextNode( ', ' ) );
 		para.appendChild( lab );
 	}
-	input.appendChild( para );
+	document.getElementById( 'input' ).appendChild( para );
 }
 
 function input_ints( n, labels ) {
@@ -124,13 +126,11 @@ function input_floats( n, labels ) {
 }
 
 function output( str, label ) {
-    var output = document.getElementById( 'output' );
-    output.value += ( label === undefined ? '' : label ) + str + '\n';
+    outputta.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
 function error( str, label ) {
-    var error = document.getElementById( 'error' );
-    error.value += ( label === undefined ? '' : label ) + str + '\n';
+    errorta.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
 function marker( point, title, description, src, extra ) {
