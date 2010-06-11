@@ -21,19 +21,22 @@ from os.path import exists
 from string import Template
 from sys import argv
 from xml.dom.minidom import parseString
-from zipfile import ZipFile
+from zipfile import ZipFile, BadZipfile
 
 __data = dict()
 
-with open( argv[ 0 ], 'rb' ) as f:
-	zf = ZipFile( f, 'r' )
-	prefix_len = len( 'resources/' )
-	for zi in zf.infolist():
-		if zi.file_size and zi.filename.startswith( 'resources/' ):
-			name = zi.filename[ prefix_len : ]
-			data = zf.read( zi )
-			__data[ name ] = Template( data ) if name.startswith( 'templates/' ) else data
-	zf.close()
+try:
+	with open( argv[ 0 ], 'rb' ) as f:
+		zf = ZipFile( f, 'r' )
+		prefix_len = len( 'resources/' )
+		for zi in zf.infolist():
+			if zi.file_size and zi.filename.startswith( 'resources/' ):
+				name = zi.filename[ prefix_len : ]
+				data = zf.read( zi )
+				__data[ name ] = Template( data ) if name.startswith( 'templates/' ) else data
+		zf.close()
+except BadZipfile:
+	pass
 
 if exists( 'data.zip' ): 
 	with open( 'data.zip', 'rb' ) as f:

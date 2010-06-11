@@ -34,25 +34,6 @@ NAMESPACES = {
 
 LOGGER = getLogger( "server.kml" )
 
-import resources
-
-doc = resources.load_metadata()
-if doc:
-	xml_placemarks = doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' )
-	placemarks = [ None ] * len( xml_placemarks )
-	for placemark in xml_placemarks:
-		id = placemark.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
-		placemarks[ int( id.split( '_' )[ 1 ] ) ] = placemark
-else:
-	doc = Document()
-	root = doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
-	root.setAttribute( 'xmlns', NAMESPACES[ 'kml' ].uri )
-	root.setAttribute( 'xmlns:' + NAMESPACES[ 'foaf' ].prefix, NAMESPACES[ 'foaf' ].uri )
-	root.setAttribute( 'xmlns:' + NAMESPACES[ 'dc' ].prefix, NAMESPACES[ 'dc' ].uri )
-	root.setAttribute( 'xmlns:' + NAMESPACES[ 'xml' ].prefix, NAMESPACES[ 'xml' ].uri )
-	doc.appendChild( root )
-	placemarks = []
-
 def dump():
 	resources.save_metadata( string() )
 
@@ -108,3 +89,45 @@ def extract_lat_lon( data ):
 		( lat_rat[ 0 ] + lat_rat[ 1 ] / 60 + lat_rat[ 2 ] / 3600 ) * ( 1 if lat_ref == "N" else -1 ),
 		( lon_rat[ 0 ] + lon_rat[ 1 ] / 60 + lon_rat[ 2 ] / 3600 ) * ( -1 if lon_ref == "W" else 1 )
 	)
+
+import resources
+
+doc = resources.load_metadata()
+if doc:
+	xml_placemarks = doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' )
+	placemarks = [ None ] * len( xml_placemarks )
+	for pm in xml_placemarks:
+		id = pm.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
+		placemarks[ int( id.split( '_' )[ 1 ] ) ] = pm
+else:
+	doc = Document()
+	root = doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
+	root.setAttribute( 'xmlns', NAMESPACES[ 'kml' ].uri )
+	root.setAttribute( 'xmlns:' + NAMESPACES[ 'foaf' ].prefix, NAMESPACES[ 'foaf' ].uri )
+	root.setAttribute( 'xmlns:' + NAMESPACES[ 'dc' ].prefix, NAMESPACES[ 'dc' ].uri )
+	root.setAttribute( 'xmlns:' + NAMESPACES[ 'xml' ].prefix, NAMESPACES[ 'xml' ].uri )
+	doc.appendChild( root )
+	placemarks = []
+
+if __name__ == '__main__':
+
+	from sys import argv
+	from os import listdir
+	from os.path import join
+	
+	print placemark
+
+	dir = argv[ 1 ]
+	for path in listdir( dir ):
+		fpath = join( dir, path )
+		num = len( placemarks )
+		with open( fpath, 'rb' ) as f:
+			data = f.read()
+			resources.save_image( num, data )
+			point = extract_lat_lon( data )
+			pm = placemark( point )
+			pm.appendChild( name( path ) )
+			pm.appendChild( description( 'Flikr image' ) )
+			append( pm )
+	dump()
+	resources.dump()
