@@ -100,6 +100,7 @@ function _input( n, k, labels ) {
 		var ctrl = document.createElement( 'input' );
 		ctrl.setAttribute( 'type', 'text' );
 		ctrl.setAttribute( 'class', k );
+		ctrl.setAttribute( 'size', '60' );
 		var lab = document.createElement( 'label' );
 		if ( labels !== undefined && labels[ i ] !== undefined )
 			lab.appendChild( document.createTextNode( labels[ i ] + ': ' ) );
