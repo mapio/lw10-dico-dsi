@@ -18,8 +18,15 @@ e debitamente scompattato)
 
 basta fare:
 
-	cp data-example.zip data.zip
-	./run
+	cp data/example.zip data.zip
+	
+oppure
+
+	cp data/flikr.zip data.zip
+
+e quindi
+
+	./bin/run
 
 e (dovrebbe) partire un server web che risponde all'URL
 
@@ -37,3 +44,56 @@ sputtanti data.zip, sempre meglio fermarlo con l'URL qui sopra):
 
 Non c'è logging e gestione dell'errore, o ripulitura dell'input dell'utente…
 prima di darlo in mano agli studenti va molto ripulito.
+
+
+Sotto Windows
+-------------
+
+Preparare la "distribuzione" con 
+
+	./bin/dist
+
+quindi scaricare sulla macchina Windows il file 
+
+	./dist.zip
+	
+e scompattarlo, questo dovrebbe creare tre file:
+
+ 	server.zip, data.zip run.bat 
+
+in una stessa directory; per eseguire il server basta fare doppio click su
+
+	run.bat
+
+
+User Applications
+-----------------
+
+Per creare una "user app" di nome NOME_APP si devono fare i seguenti passi:
+
+1) creare un template in server/resources/template [opzionale];
+
+2) creare il codice javascript in server/resource/code/NOME_APP.js;
+
+3) aggiungere una sezione NOME_APP che la descriva in
+   server/resources/userapps.cfg;
+
+La sezione di descrizione deve contenere i campi "title" e "template" (che
+deve riferirsi al template da usare per il body, eventualmente creato al punto
+1) e opzionalmente il campo "javascript".
+
+Tale campo contiene i file JS che devono essere caricati (cui, di default,
+vengono aggiunti server/static/applib.js e server/code/NOME_APP.js), per tale
+sezione sono previste le macro %(GMAP_JS)s e %(GCHART_JS)s rispettivamente per
+le mappe e i grafici delle API di Google.
+
+
+Librerie
+--------
+
+Questo software è basato, ed include, le seguenti librerie:
+
+EXIF.py, available at http://sourceforge.net/projects/exif-py/
+Javascipt Shell, available at http://www.squarefree.com/shell/
+CodeMirror, available at http://marijn.haverbeke.nl/codemirror/
+

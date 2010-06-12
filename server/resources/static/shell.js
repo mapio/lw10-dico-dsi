@@ -1,4 +1,4 @@
-/* See LIBS.txt for more info about this file. */
+/* See README.txt for more info about this file. */
 
 var 
 histList = [""], 
