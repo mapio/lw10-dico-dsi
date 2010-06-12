@@ -18,7 +18,7 @@
 from collections import namedtuple
 from io import BytesIO
 from logging import getLogger
-from xml.dom.minidom import Document
+from xml.dom.minidom import Document, parseString
 
 from exif import process_file
 
@@ -92,14 +92,9 @@ def extract_lat_lon( data ):
 
 import resources
 
-doc = resources.load_metadata()
-if doc:
-	xml_placemarks = doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' )
-	placemarks = [ None ] * len( xml_placemarks )
-	for pm in xml_placemarks:
-		id = pm.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
-		placemarks[ int( id.split( '_' )[ 1 ] ) ] = pm
-else:
+try:
+	doc = parseString( resources.load_metadata() )
+except KeyError:
 	doc = Document()
 	root = doc.createElementNS( NAMESPACES[ 'kml' ].uri, 'kml' )
 	root.setAttribute( 'xmlns', NAMESPACES[ 'kml' ].uri )
@@ -107,7 +102,12 @@ else:
 	root.setAttribute( 'xmlns:' + NAMESPACES[ 'dc' ].prefix, NAMESPACES[ 'dc' ].uri )
 	root.setAttribute( 'xmlns:' + NAMESPACES[ 'xml' ].prefix, NAMESPACES[ 'xml' ].uri )
 	doc.appendChild( root )
-	placemarks = []
+
+xml_placemarks = doc.getElementsByTagNameNS( NAMESPACES[ 'kml' ].uri, 'Placemark' )
+placemarks = [ None ] * len( xml_placemarks )
+for pm in xml_placemarks:
+	id = pm.getAttributeNS( NAMESPACES[ 'xml' ].uri, 'id' )
+	placemarks[ int( id.split( '_' )[ 1 ] ) ] = pm
 
 if __name__ == '__main__':
 
@@ -115,8 +115,6 @@ if __name__ == '__main__':
 	from os import listdir
 	from os.path import join
 	
-	print placemark
-
 	dir = argv[ 1 ]
 	for path in listdir( dir ):
 		fpath = join( dir, path )
