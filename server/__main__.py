@@ -15,8 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with lw09-dico-dsi.  If not, see <http://www.gnu.org/licenses/>.
 
+from atexit import register
 from logging import StreamHandler, Formatter, getLogger, DEBUG
 from os import path
+from signal import signal, SIGHUP
 from sys import argv
 from wsgiref.simple_server import make_server
 
@@ -29,10 +31,12 @@ ROOT_LOGGER.addHandler( sh )
 
 import server
 
+register( server.halt )
+signal( SIGHUP, lambda signum, frame: server.halt() )
+
 simple_server = make_server( 'localhost', 8000, server.application )	
 ROOT_LOGGER.info( 'Serving on http://localhost:8000/' )
 try:
 	while not server.stop: simple_server.handle_request()
 except KeyboardInterrupt:
 	pass
-server.halt()
