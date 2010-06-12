@@ -20,6 +20,8 @@ from io import BytesIO
 from logging import getLogger
 from xml.dom.minidom import Document, parseString
 
+LOGGER = getLogger( "server.kml" )
+
 from exif import process_file
 
 Point = namedtuple( 'Point', 'lat lon' )
@@ -31,8 +33,6 @@ NAMESPACES = {
 	'dc': Namespace( 'http://dublincore.org/documents/dcmi-namespace/', 'dc' ),
 	'xml': Namespace( 'http://www.w3.org/XML/1998/namespace', 'xml' ), 
 }
-
-LOGGER = getLogger( "server.kml" )
 
 def dump():
 	resources.save_metadata( string() )

@@ -35,7 +35,7 @@ def __init():
 					if zi.file_size and t: __data[ t ] = zf.read( zi )
 				zf.close()
 		except ( BadZipfile, IOError ):
-			LOGGER.warn( 'zip2data: fail to read ' + path )
+			LOGGER.warn( 'Failed to read ' + path )
 	zip( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
 	zip( 'code.zip', lambda zi : zi.filename )
 	zip( 'data.zip', lambda zi : zi.filename )

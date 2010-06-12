@@ -16,8 +16,11 @@
 # along with lw09-dico-dsi.  If not, see <http://www.gnu.org/licenses/>.
 
 from cgi import FieldStorage, escape
+from logging import getLogger
 from mimetypes import guess_type
 from wsgiref.util import request_uri as wsgi_request_uri
+
+LOGGER = getLogger( "server.server" )
 
 import kml
 import resources
@@ -133,6 +136,7 @@ def application( environ, start_response ):
 
 def halt():
 	global stop
+	LOGGER.info( 'Clean halt in progress...' )
 	if not stop:
 		stop = True
 		kml.dump()
