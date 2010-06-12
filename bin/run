@@ -1,6 +1,28 @@
 #!/bin/bash
 
+echocol () {
+  echo -e "\033[31m${0##*/}: $@\033[0m"
+}
+
 ./bin/mkzip 
 python2.6 server.zip
-unzip -l data.zip
-unzip -p data.zip img/metadata.kml | xmllint --format -
+
+if [ ! -z $1 ]; then
+
+	echocol "contenuto di data.zip"
+
+	unzip -l data.zip
+
+	echocol "dump dei metadati"
+
+	unzip -p data.zip data/metadata.kml | xmllint --format -
+
+	echocol "contenuto di code.zip"
+
+	unzip -l code.zip
+
+	echocol "dump delle configurazioni"
+
+	unzip -p code.zip code/apps.cfg
+
+fi
