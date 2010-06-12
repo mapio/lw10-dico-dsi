@@ -34,13 +34,16 @@ __start_response = None
 def handle_edit():
 	try:
 		name = request_uri_parts.pop( 0 )
+		code = resources.load_code( name )
 	except IndexError:
 		return http( 400, 'No application to edit (uri {0})'.format( request_uri ) )
+	except KeyError:
+		return http( 400, 'No code present for application "{0}"'.format( name ) )
 	if not request_uri_parts:
 		return html( 'edit' )
 	action = request_uri_parts.pop( 0 )
 	if action == 'load':
-		return http( 200, resources.load_code( name ), content_type = 'text/javascript; charset=utf-8' )
+		return http( 200, code, content_type = 'text/javascript; charset=utf-8' )
 	elif action == 'save' and request_method == 'POST':
 		resources.save_code( name, post_data[ 'code' ].value )
 		return http( 200 )
@@ -67,8 +70,11 @@ def handle_run():
 	try:
 		app = rup.pop( 0 )
 	except IndexError:
-		return http( 400, 'No application specified in "run" (uri {0})'.format( request_uri ) )
-	return html( app )
+		return http( 400, 'No application specified to run (uri {0})'.format( request_uri ) )
+	try:
+		return html( app )
+	except KeyError:
+		return http( 400, 'No configuration present for application "{0}"'.format( app ) )
 
 def handle_shell():
 	return html( 'shell' )

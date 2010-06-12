@@ -32,13 +32,13 @@ def __init():
 				zf = ZipFile( f, 'r' )
 				for zi in zf.infolist():
 					t = read_as( zi )
-					if t: __data[ t ] = zf.read( zi )
+					if zi.file_size and t: __data[ t ] = zf.read( zi )
 				zf.close()
 		except ( BadZipfile, IOError ):
 			LOGGER.warn( 'zip2data: fail to read ' + path )
 	zip( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
-	zip( 'data.zip', lambda zi : zi.filename )
 	zip( 'code.zip', lambda zi : zi.filename )
+	zip( 'data.zip', lambda zi : zi.filename )
 	LOGGER.info( 'Read {0} resources'.format( len( __data.keys() ) ) )
 
 __init()
@@ -64,11 +64,11 @@ def save_image( num, image ):
 def load_metadata():
 	return __data[ 'data/metadata.kml' ] 
 
-def load_userappsconfig():
-	return __data[ 'code/apps.cfg' ]
-
 def save_metadata( string ):
 	__data[ 'data/metadata.kml' ] = string
+
+def load_userappsconfig():
+	return __data[ 'code/apps.cfg' ]
 
 def dump():
 	def zip( path, must_write ):
