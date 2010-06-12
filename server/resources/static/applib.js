@@ -19,7 +19,16 @@
 var map = null; // after _init_map this will be instantiated as a google.maps.Map
 var Point = null; // after _init_map this will be google.maps.LatLng
 var Table = null; // after _init_chart this will be instantiatend as a google.visualization.DataTable
-var errorta, outputta; // the error and output text areas;
+var outputta; // the output text areas;
+
+
+/**
+	Sest the style of the element with the given id to 'block'
+*/
+function _show( id ) {
+	var element = document.getElementById( id );
+	if ( element ) element.style.display = 'block';
+}
 
 /**
 	Inits the Google map object (and Point function) after makeing the 
@@ -32,8 +41,7 @@ function _init_map( lat, lng ) {
 		lat = 45.477822;
 		lng = 9.169501;
 	}
-	var mapfs = document.getElementById( 'mapfs' );
-	if ( mapfs ) mapfs.style.display = 'block';
+	_show( 'mapfs' );
 	map = new google.maps.Map( document.getElementById( 'map' ), {
 		zoom: 13,
 		center: new google.maps.LatLng( lat, lng ),
@@ -44,8 +52,7 @@ function _init_map( lat, lng ) {
 
 function _init_chart() {
 	if ( typeof google.visualization == 'undefined' ) return;
-	var chartfs = document.getElementById( 'chartfs' );
-	if ( chartfs ) chartfs.style.display = 'block';
+	_show( 'chartfs' );
 	Table = google.visualization.DataTable;
 }
 
@@ -58,7 +65,7 @@ function _init() {
 		_init_chart();
 	}
 	outputta = document.getElementById( 'output' );
-	errorta = document.getElementById( 'error' );
+	if ( DEBUG ) _show( 'fvlogger' );
 	init();
 }
 
@@ -66,7 +73,6 @@ function _init() {
 	Called by 'onclick' by the button in the input fieldset, collects inputs and passes them
 	to the user main function.
 */
-
 function _main() {
 	var input = Array();
 	var inputs = document.getElementsByTagName( 'input' );
@@ -76,7 +82,7 @@ function _main() {
 	    if ( inputs[ i ].getAttribute( 'class' ) == 'float' ) input[ i ] = parseFloat(input[i]);
 	}
 	outputta.value = '';
-	errorta.value = '';
+	if ( DEBUG ) eraseLog( false );
 	// if map is defined we should re-init it!
 	try {
 		main( input );
@@ -84,7 +90,7 @@ function _main() {
 		oer = err;
 		var txt = "There was an error on this page.\n\n";
 		txt += "Error description: " + err;
-		error( txt );
+		if ( DEBUG ) error( txt );
 	}
 }
 
@@ -127,10 +133,6 @@ function input_floats( n, labels ) {
 
 function output( str, label ) {
     outputta.value += ( label === undefined ? '' : label ) + str + '\n';
-}
-
-function error( str, label ) {
-    errorta.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
 function marker( point, title, description, src, extra ) {

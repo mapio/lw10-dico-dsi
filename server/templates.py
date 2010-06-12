@@ -45,8 +45,9 @@ USER_APPS = uac.sections()
 for app in USER_APPS:
 	js = uac.get( app, 'javascript' ).split() if uac.has_option( app, 'javascript' ) else []
 	js.append( '/static/applib.js' )
+	js.append( '/static/fvlogger/logger.js' )
 	js.append( '/edit/{0}/load'.format( app ) )
-	ALL[ app ] = AppTemplate( uac.get( app, 'title' ).encode( 'utf8' ), uac.get( app, 'template' ), js, None )
+	ALL[ app ] = AppTemplate( uac.get( app, 'title' ).encode( 'utf8' ), uac.get( app, 'template' ), js, [ '/static/fvlogger/logger.css' ] )
 
 def base_template( title, body, js = '',css = '' ):
 	return base_template.t.substitute( title = title, body = body, js = js, css = css )

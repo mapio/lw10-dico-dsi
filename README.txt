@@ -156,7 +156,8 @@ Librerie esterne
 
 Questo software è basato, ed include, le seguenti librerie:
 
-EXIF.py, available at http://sourceforge.net/projects/exif-py/
-Javascipt Shell, available at http://www.squarefree.com/shell/
 CodeMirror, available at http://marijn.haverbeke.nl/codemirror/
+EXIF.py, available at http://sourceforge.net/projects/exif-py/
+fvlogger, abailable at http://www.fivevoltlogic.com/code/fvlogger/
+Javascipt Shell, available at http://www.squarefree.com/shell/
 

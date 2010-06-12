@@ -4,9 +4,8 @@
 			<div id="input"></div>
 			<div><input type="button" value="esegui il programma" onclick="_main()"/></div>	
 		</fieldset>
-		<fieldset><legend>Output and exceptions (errors)</legend>
+		<fieldset><legend>Output</legend>
 			<textarea id='output' cols='60' rows='10' readonly='readonly' ></textarea>
-			<textarea id='error' cols='60' rows='10' readonly='readonly' ></textarea>
 		</fieldset>
 		<fieldset id="mapfs" style="display: none"><legend>Mappa</legend>
 			<div id="map" style="height: 200px; width:400px; border: 1px solid black;"></div>
@@ -15,4 +14,27 @@
 			<div id="chart" style="height: 200px; width:400px; border: 1px solid black;"></div>
 		</fieldset>
 	</form>
+	<div id="fvlogger" style="display: none">
+		<dl>
+		<dt>logger</dt>
+		<dd class="all">
+			<a href="#fvlogger" onclick="showAll();" title="show all">all</a>
+		</dd>
+		<dd class="debug">
+			<a href="#fvlogger" onclick="showDebug();" title="show debug">debug</a>
+		</dd>
+		<dd class="info">
+			<a href="#fvlogger" onclick="showInfo();" title="show info">info</a>
+		</dd>
+		<dd class="warn">
+			<a href="#fvlogger" onclick="showWarn();" title="show warnings">warn</a>
+		</dd>
+		<dd class="error">
+			<a href="#fvlogger" onclick="showError();" title="show errors">error</a>
+		</dd>
+		<dd class="fatal">
+			<a href="#fvlogger" onclick="showFatal();" title="show fatals">fatal</a>
+		</dd>
+		</dl>
+	</div>
 </body>
