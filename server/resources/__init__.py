@@ -15,35 +15,36 @@
 # You should have received a copy of the GNU General Public License
 # along with lw09-dico-dsi.  If not, see <http://www.gnu.org/licenses/>.
 
-from ConfigParser import ConfigParser
-from io import StringIO
+from logging import getLogger
 from os.path import exists
 from string import Template
 from sys import argv
-from xml.dom.minidom import parseString
 from zipfile import ZipFile, BadZipfile
 
+LOGGER = getLogger( "server.resources" )
+
+def _zip2data( path, read_as ):
+	try:
+		with open( path, 'rb' ) as f:
+			zf = ZipFile( f, 'r' )
+			for zi in zf.infolist():
+				t = read_as( zi )
+				if t: __data[ t ] = zf.read( zi )
+			zf.close()
+	except ( BadZipfile, IOError ):
+		LOGGER.warn( 'zip2data: fail to read ' + path )
+
+def _data2zip( path, must_write ):
+	with open( path, 'wb' ) as f:
+		zf = ZipFile( f, 'w' )
+		for arcname, bytes in __data.iteritems():
+			prefix_is = arcname.startswith
+			if must_write( arcname ): zf.writestr( arcname, bytes )
+		zf.close()
+
 __data = dict()
-
-try:
-	with open( argv[ 0 ], 'rb' ) as f:
-		zf = ZipFile( f, 'r' )
-		prefix_len = len( 'resources/' )
-		for zi in zf.infolist():
-			if zi.file_size and zi.filename.startswith( 'resources/' ):
-				name = zi.filename[ prefix_len : ]
-				data = zf.read( zi )
-				__data[ name ] = Template( data ) if name.startswith( 'templates/' ) else data
-		zf.close()
-except BadZipfile:
-	pass
-
-if exists( 'data.zip' ): 
-	with open( 'data.zip', 'rb' ) as f:
-		zf = ZipFile( f, 'r' )
-		for zi in zf.infolist():
-			if zi.file_size: __data[ zi.filename ] = zf.read( zi )
-		zf.close()
+_zip2data( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
+_zip2data( 'data.zip', lambda zi : zi.filename )
 
 def load_static( name ):
 	return __data[ 'static/' + name ]
@@ -64,19 +65,10 @@ def save_image( num, image ):
 	__data[ 'img/{0:03d}.jpg'.format( num ) ] = image
 	
 def load_metadata():
-	try:
-		string = __data[ 'img/metadata.kml' ] 
-	except KeyError:
-		return None
-	return parseString( string )
+	return __data[ 'img/metadata.kml' ] 
 
 def load_userappsconfig():
-	cp = ConfigParser( { 
-		'GMAP_JS': 'http://maps.google.com/maps/api/js?sensor=false',
-		'GCHART_JS': 'http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22packages%22%3A%5B%22linechart%22%5D%7D%5D%7D', # obtained via http://code.google.com/apis/ajax/documentation/autoloader-wizard.html
-	} )
-	cp.readfp( StringIO( __data[ 'userapps.cfg' ].decode( 'utf8' ) ) )
-	return cp
+	return __data[ 'userapps.cfg' ]
 
 def save_metadata( string ):
 	__data[ 'img/metadata.kml' ] = string
