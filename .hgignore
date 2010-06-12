@@ -2,4 +2,5 @@ syntax: glob
 
 data.zip
 server.zip
+code.zip
 *.pyc

@@ -23,28 +23,25 @@ from zipfile import ZipFile, BadZipfile
 
 LOGGER = getLogger( "server.resources" )
 
-def _zip2data( path, read_as ):
-	try:
-		with open( path, 'rb' ) as f:
-			zf = ZipFile( f, 'r' )
-			for zi in zf.infolist():
-				t = read_as( zi )
-				if t: __data[ t ] = zf.read( zi )
-			zf.close()
-	except ( BadZipfile, IOError ):
-		LOGGER.warn( 'zip2data: fail to read ' + path )
-
-def _data2zip( path, must_write ):
-	with open( path, 'wb' ) as f:
-		zf = ZipFile( f, 'w' )
-		for arcname, bytes in __data.iteritems():
-			prefix_is = arcname.startswith
-			if must_write( arcname ): zf.writestr( arcname, bytes )
-		zf.close()
-
 __data = dict()
-_zip2data( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
-_zip2data( 'data.zip', lambda zi : zi.filename )
+
+def __init():
+	def zip( path, read_as ):
+		try:
+			with open( path, 'rb' ) as f:
+				zf = ZipFile( f, 'r' )
+				for zi in zf.infolist():
+					t = read_as( zi )
+					if t: __data[ t ] = zf.read( zi )
+				zf.close()
+		except ( BadZipfile, IOError ):
+			LOGGER.warn( 'zip2data: fail to read ' + path )
+	zip( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
+	zip( 'data.zip', lambda zi : zi.filename )
+	zip( 'code.zip', lambda zi : zi.filename )
+	LOGGER.info( 'Read {0} resources'.format( len( __data.keys() ) ) )
+
+__init()
 
 def load_static( name ):
 	return __data[ 'static/' + name ]
@@ -59,24 +56,27 @@ def save_code( name, code ):
 	__data[ 'code/{0}.js'.format( name ) ] = code
 
 def load_image( num ):
-	return __data[ 'img/{0:03d}.jpg'.format( num ) ]
+	return __data[ 'data/{0:03d}.jpg'.format( num ) ]
 
 def save_image( num, image ):
-	__data[ 'img/{0:03d}.jpg'.format( num ) ] = image
+	__data[ 'data/{0:03d}.jpg'.format( num ) ] = image
 	
 def load_metadata():
-	return __data[ 'img/metadata.kml' ] 
+	return __data[ 'data/metadata.kml' ] 
 
 def load_userappsconfig():
-	return __data[ 'userapps.cfg' ]
+	return __data[ 'code/apps.cfg' ]
 
 def save_metadata( string ):
-	__data[ 'img/metadata.kml' ] = string
+	__data[ 'data/metadata.kml' ] = string
 
 def dump():
-	with open( 'data.zip', 'wb' ) as f:
-		zf = ZipFile( f, 'w' )
-		for arcname, bytes in __data.iteritems():
-			prefix_is = arcname.startswith
-			if prefix_is( 'code/' ) or prefix_is( 'img/'): zf.writestr( arcname, bytes )
-		zf.close()
+	def zip( path, must_write ):
+		with open( path, 'wb' ) as f:
+			zf = ZipFile( f, 'w' )
+			for arcname, bytes in __data.iteritems():
+				prefix_is = arcname.startswith
+				if must_write( arcname ): zf.writestr( arcname, bytes )
+			zf.close()
+	zip( 'data.zip', lambda f : f.startswith( 'data/' ) )
+	zip( 'code.zip', lambda f : f.startswith( 'code/' ) )
