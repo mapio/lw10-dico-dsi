@@ -20,21 +20,19 @@ from os import path
 from sys import argv
 from wsgiref.simple_server import make_server
 
+ROOT_LOGGER = getLogger( "server" )
+ROOT_LOGGER.setLevel( DEBUG )
+sh = StreamHandler()
+sh.setLevel( DEBUG )
+sh.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
+ROOT_LOGGER.addHandler( sh )
+
 import server
 
-if __name__ == '__main__':
-	
-	ROOT_LOGGER = getLogger( "server" )
-	ROOT_LOGGER.setLevel( DEBUG )
-	ch = StreamHandler()
-	ch.setLevel( DEBUG )
-	ch.setFormatter( Formatter( "[%(asctime)s] %(levelname)s - %(name)s: %(message)s","%Y/%b/%d %H:%M:%S" ) )
-	ROOT_LOGGER.addHandler( ch )
-
-	simple_server = make_server( 'localhost', 8000, server.application )	
-	ROOT_LOGGER.info( "Serving on http://localhost:8000/{tag,shell,edit,run}" )
-	try:
-		while not server.stop: simple_server.handle_request()
-	except KeyboardInterrupt:
-		pass
-	server.halt()
+simple_server = make_server( 'localhost', 8000, server.application )	
+ROOT_LOGGER.info( 'Serving on http://localhost:8000/' )
+try:
+	while not server.stop: simple_server.handle_request()
+except KeyboardInterrupt:
+	pass
+server.halt()
