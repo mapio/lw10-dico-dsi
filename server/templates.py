@@ -54,8 +54,11 @@ base_template.t = Template( resources.load_template( 'base' ) )
 
 def html( name, **kwargs ):
 	t = ALL[ name ]
-	j = '\n\t'.join
-	js = j( '<script type="text/javascript" src="{0}"></script>'.format( _ ) for _ in t.js ) if t.js else ''
-	css = j( '<link rel="stylesheet" type="text/css" href="{0}" />'.format( _ ) for _ in t.css ) if t.css else ''
-	body = Template( resources.load_template( t.body_template ) ).substitute( **kwargs )
+	try:
+		j = '\n\t'.join
+		js = j( '<script type="text/javascript" src="{0}"></script>'.format( _ ) for _ in t.js ) if t.js else ''
+		css = j( '<link rel="stylesheet" type="text/css" href="{0}" />'.format( _ ) for _ in t.css ) if t.css else ''
+		body = Template( resources.load_template( t.body_template ) ).substitute( **kwargs )
+	except KeyError:
+		raise RuntimeError # the caller intercepts KeyError as a signe that no app is configured, so we swallow other similar execptions and rerise a different one
 	return base_template( t.title, body, js, css )

@@ -71,13 +71,12 @@ presente su tale pagina, il che corrisponde ad accedere all'indirizzo
 
 Al termine dell'esecuzione del server vengono salvate in data.zip le immagini
 (e metadati) aggiunti tramite l'applicazione di tagging, mentre in code.zip
-viene salvato il codice delle applicazioni utente e le relative
-configurazioni.
+viene salvato il codice (e configurazioni) delle applicazioni utente.
 
 Si osservi che il codice e le configurazioni delle applicazioni utente
-eventualmente presenti in code.zip *adombrano* le rispettive versioni
-"originali" contenute in server.zip; per "ripristinare" queste ultime è però
-sufficiente eliminare (o rinominare), il file code.zip.
+presenti in code.zip *adombrano* le rispettive versioni "originali" contenute
+in server.zip; per "ripristinare" queste ultime è però sufficiente eliminare
+(o rinominare), il file code.zip.
 
 
 Applicazioni utente
