@@ -3,4 +3,6 @@ syntax: glob
 data.zip
 server.zip
 code.zip
+dist
+dist.zip
 *.pyc

@@ -26,7 +26,9 @@ potete produrre il file di distribuzione descritto in seguito).
 
 Il pacchetto si basa su tre zip file
 
-	server.zip data.zip code.zip
+	server.zip
+	data.zip
+	code.zip
 
 (di cui il primo è da non modificare, mentre gli ultimi due sono opzionali)
 che contengono rispettivamente:
@@ -35,28 +37,30 @@ che contengono rispettivamente:
 	le immagini ed i metadati relativi
 	il codice delle *applicazioni utente* e le relative configurazioni
 
-Nel file dist.zip contiene, oltre a server.zip, i file
+Nel file dist.zip, oltre a server.zip, sono presenti i file
 
 	run.bat
 
-che serve ad eseguire l'applicazione sotto Windows (mediante semplice
-doppio-click, a patto di avere installato Python 2.6 e di avere tutti i file
-dell'applicazione nella medesima cartella) ed i file
+che serve ad eseguire l'applicazione sotto Windows ed i file
 
 	flikr.zip
 	example.zip
 
 che sono due "versioni" di data.zip che contengono, rispettivamente, alcune
-centinaia di immagini scaricate da Flikr (non annotate) e tre immagini
-campione (con annotazioni); se si intende usare uno di questi insiemi di
-immagini è sufficiente rinominare il relativo file come data.zip. Per eseguire
-il server sotto GNU/Linux è sufficiente posizionarsi nella cartella contenete
-gli zip file e dare il comando
+centinaia di immagini scaricate da Flikr (geotaggate, ma non annotate) e tre
+immagini campione (con geotag ed annotazioni); se si intende usare uno di
+questi insiemi di immagini è sufficiente rinominare il relativo file come
+data.zip. Tali file possono anche essere decompressi per accedere alle sole
+immagini che contengono.
 
-	python2.6 server.zip
+Per eseguire il server è sufficiente aver installato Python 2.6, mettere tutti
+i file necessari descritti sopra nella stessa cartella e
 
-Una volta lanciato il server, tutte le operazioni possono essere effettuate
-puntando un browser (Firefox, o Chrome) all'indirizzo
+-) usando Windows, fare doppio click sull'icona di run.bat,
+-) usando Linux, dare il comando "python2.6 server.zip" (senza virgolette).
+
+Una volta posto in esecuzione il server, tutte le operazioni possono essere
+effettuate puntando un browser (Firefox, o Chrome) all'indirizzo
 
 	http://localhost:8000/
 
