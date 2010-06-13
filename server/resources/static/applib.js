@@ -72,7 +72,7 @@ function _init() {
 	Called by 'onclick' by the edit button in the input fieldset, redirects to the edit page.
 */
 function _edit() {
-	window.location = document.URL.replace( /\/+$/, '' ).replace( /\/run\//, '/edit/' );
+	window.location = document.URL.replace( /(\?|#).*$/, '' ).replace( /([^:])\/+/g, '$1/' ).replace( /\/run\//, '/edit/' )	;
 }
 
 /**
@@ -89,7 +89,7 @@ function _main() {
 	}
 	outputta.value = '';
 	if ( DEBUG ) eraseLog( false );
-	// if map and graph are defined we should re-init them!
+	// if map and chart are defined we should re-init them!
 	if ( DEBUG ) try {
 		main( input );
 	} catch ( err ) {

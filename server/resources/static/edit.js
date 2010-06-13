@@ -42,7 +42,7 @@ function revert() {
 }
 
 function run() {
-	window.location = document.URL.replace( /\/+$/, '' ).replace( /\/edit\//, '/run/' );
+	window.location = document.URL.replace( /(\?|#).*$/, '' ).replace( /([^:])\/+/g, '$1/' ).replace( /\/edit\//, '/run/' );
 }
 
 function save() {
