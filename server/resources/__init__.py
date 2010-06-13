@@ -26,19 +26,26 @@ LOGGER = getLogger( "server.resources" )
 __data = dict()
 
 def __init():
+	filterzi = lambda prefix: lambda zi: zi.filename if zi.filename.startswith( prefix + '/' ) and not zi.filename.endswith( '/' ) else None
+	fzi_res = filterzi( 'resources' )
+	len_res = len( 'resources/' )
+	def filter_res( zi ):
+		name = fzi_res( zi )
+		return name[ len_res: ] if name else None
 	def zip( path, read_as ):
 		try:
 			with open( path, 'rb' ) as f:
 				zf = ZipFile( f, 'r' )
 				for zi in zf.infolist():
 					t = read_as( zi )
-					if zi.file_size and t: __data[ t ] = zf.read( zi )
+					if t: 
+						__data[ t ] = zf.read( zi )
 				zf.close()
 		except ( BadZipfile, IOError ):
 			LOGGER.warn( 'Failed to read ' + path )
-	zip( argv[ 0 ], lambda zi : zi.filename[ len( 'resources/' ) : ] if zi.filename.startswith( 'resources/' ) else None )
-	zip( 'code.zip', lambda zi : zi.filename )
-	zip( 'data.zip', lambda zi : zi.filename )
+	zip( argv[ 0 ], filter_res )
+	zip( 'code.zip', filterzi( 'code' ) )
+	zip( 'data.zip', filterzi( 'data' ) )
 	LOGGER.info( 'Read {0} resources'.format( len( __data.keys() ) ) )
 
 __init()
