@@ -20,7 +20,7 @@ var map = null; // after _init_map this will be instantiated as a google.maps.Ma
 var Point = null; // after _init_map this will be google.maps.LatLng
 var Table = null; // after _init_chart this will be instantiatend as a google.visualization.DataTable
 var outputta; // the output text areas;
-
+var DEBUG; // if true, fvlogger will be enabled 
 
 /**
 	Sest the style of the element with the given id to 'block'
@@ -70,6 +70,13 @@ function _init() {
 }
 
 /**
+	Called by 'onclick' by the edit button in the input fieldset, redirects to the edit page.
+*/
+function _edit() {
+	window.location = document.URL.replace( /\/+$/, '' ).replace( /\/run\//, '/edit/' );
+}
+
+/**
 	Called by 'onclick' by the button in the input fieldset, collects inputs and passes them
 	to the user main function.
 */
@@ -83,7 +90,7 @@ function _main() {
 	}
 	outputta.value = '';
 	if ( DEBUG ) eraseLog( false );
-	// if map is defined we should re-init it!
+	// if map and graph are defined we should re-init them!
 	try {
 		main( input );
 	} catch ( err ) {

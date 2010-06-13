@@ -40,6 +40,10 @@ function revert() {
 	editor.setCode( load() );
 }
 
+function run() {
+	window.location = document.URL.replace( /\/+$/, '' ).replace( /\/edit\//, '/run/' );
+}
+
 function save() {
 	var data = 
 		'--9a644c6e5fd25298e3d4763b7354617d\r\n' +
