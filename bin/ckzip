@@ -4,6 +4,8 @@ echocol () {
   echo -e "\033[31m${0##*/}: $@\033[0m"
 }
 
+cd ./dist
+
 echocol "contenuto di data.zip"
 
 unzip -l data.zip
