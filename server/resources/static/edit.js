@@ -27,6 +27,7 @@ function init() {
 		height: "480px",
 		content: load(),
 	} );
+	editor.focus();
 }
 
 function load() {
