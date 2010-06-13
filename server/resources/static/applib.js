@@ -93,7 +93,7 @@ function _main() {
 	if ( DEBUG ) try {
 		main( input );
 	} catch ( err ) {
-		error( txt );
+		error( err );
 	} else main( input );
 }
 
