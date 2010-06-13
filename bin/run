@@ -1,5 +1,6 @@
 #!/bin/bash
 
-./bin/mkzip 
+./bin/mkzip
+cd ./dist
 python2.6 server.zip
-if [ ! -z $1 ]; then ./bin/ckzip; fi
+if [ ! -z $1 ]; then ../bin/ckzip; fi

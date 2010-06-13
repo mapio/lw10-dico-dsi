@@ -1,6 +1,2 @@
-syntax: glob
-
-data.zip
-server.zip
-code.zip
-*.pyc
+^server/.*\.pyc$
+^dist/(code|data).zip
