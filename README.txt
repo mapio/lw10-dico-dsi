@@ -2,19 +2,16 @@ Learning Week DiCO DSI (2009)
 =============================
 
 Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
-il pacchetto
+il file
 
-	dist.zip
-	
-dall'indirizzo
+	http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist.zip
 
-	http://bitbucket.org/mapio/lw09-dico-dsi/downloads
-	
-(oppure potete ottenere il "sorgente" usando mercurial a partire dal repository
+Potete viceversa ottenere il "sorgente" (la versione "di sviluppo") sia usando
+Mercurial, con il comando
 
 	hg clone https://mapio@bitbucket.org/mapio/lw09-dico-dsi
 
-oppure scaricando l'ultima versione
+oppure scaricando (e scompattando) lo zip file all'indirizzo
 
 	http://bitbucket.org/mapio/lw09-dico-dsi/get/tip.zip
 
@@ -22,9 +19,9 @@ a questo punto, usando lo script
 
 	./bin/dist
 	
-potete produrre il file di distribuzione descritto in seguito).
+potete produrre il file dist.zip descritto in seguito.
 
-Il pacchetto si basa su tre zip file
+Il funzionamento del server si basa su tre zip file
 
 	server.zip
 	data.zip
@@ -109,27 +106,30 @@ che contenga i seguenti campi:
 	template: il nome del template per il body della pagina html dell'applicazione,
 	javascript: un elenco (opzionale, separato da spazi) di file di codice.
 
-Il template è da indicare come basename di uno dei file presenti in
+Il template è da indicare come basename di uno dei file presenti nella
+directory
 
-	resources/templates
+	resources/templates/
 
-di server.zip, mentre i file di codice da elencare devono essere indicati come
-basename di file presenti in 
+contenuta in server.zip, mentre i file di codice da elencare devono essere
+indicati come basename di file presenti nella directory
 
 	code/
 
-di code.zip (oppure di resources/ in server.zip); in particolare sono inclusi
-di default nell'elenco il file di codice dell'applicazione (di cui al punto 1)
-e la liberria
+contenuta in code.zip (oppure di resources/ in server.zip); in particolare
+sono inclusi di default nell'elenco il file di codice dell'applicazione (di
+cui al punto 1) e la libreria
 
 	resources/static/applib.js
 
-e sono messe a disposizione due macro %(GMAP_JS)s e %(GCHART_JS)s che indicano
-rispettivamente il codice per le mappe e i grafici delle API di Google.
+In fine, sono messe a disposizione due macro %(GMAP_JS)s e %(GCHART_JS)s che
+espandono rispettivamente al codice per le mappe e i grafici delle API di
+Google.
 
 Nel secondo caso, in cui non si voglia usare uno tra i template predisposti, è
 necessario aggiungere ai passi precedenti la seguente manipolazione del file
-server.zip (sempre ottenibile decomprimendo e quindi ricomprimendo il file):
+server.zip (sempre ottenibile decomprimendo e quindi ricomprimendo il
+medesimo):
 
 0) va aggiunto un file
 
@@ -144,13 +144,9 @@ Applib e template
 
 La libreria applib.js ed i template io.html e map.html consentono di
 sviluppare semplici applicazioni che svolgnono rispettivamente I/O di testo
-(tramite una form html) e che manipolano una Google map.
+(tramite una form html) e manipolano una Google map.
 
-Si suggerisce di fare riferimento alle applicazioni di esempio per avere
-qualche informazione sul loro funzionamento. Al momento manca una
-documentazione più specifica.
-
-Il template io.html prevede che l'applicazione implementi almeno due funzioni:
+Il template "io" prevede che l'applicazione implementi almeno due funzioni:
 
 	init,
 	main;
@@ -159,6 +155,17 @@ La prima viene chiamata all'onload della pagina, mentre la seconda viene
 chiamata alla pressione del bottone presente nella pagina (e riceve come
 argomento i valori presenti nella form, convertiti al tipo richiesto).
 
+Il template "map" prevede che l'applicazione implementi la funzione 
+
+	init
+
+che viene chiamata all'onload della pagina e può fare affidamento che sia già
+stata inizializzata una Google map (accessibile tramite l'oggetto map, o con
+appositi metodi di convenienza per punnti e marker).
+
+Si suggerisce di fare riferimento alle applicazioni di esempio per avere
+qualche informazione sul loro funzionamento. Al momento manca una
+documentazione più specifica.
 
 
 Librerie esterne
