@@ -41,7 +41,7 @@ uac = ConfigParser( {
 } )
 uac.readfp( StringIO( resources.load_userappsconfig().decode( 'utf8' ) ) )
 
-USER_APPS = uac.sections()
+USER_APPS = sorted( uac.sections() )
 for app in USER_APPS:
 	js = uac.get( app, 'javascript' ).split() if uac.has_option( app, 'javascript' ) else []
 	js.append( '/static/applib.js' )
