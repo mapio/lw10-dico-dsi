@@ -53,7 +53,6 @@ function _init_map( lat, lng ) {
 function _init_chart() {
 	if ( typeof google.visualization == 'undefined' ) return;
 	_show( 'chartfs' );
-	Table = google.visualization.DataTable;
 }
 
 /**
@@ -91,14 +90,11 @@ function _main() {
 	outputta.value = '';
 	if ( DEBUG ) eraseLog( false );
 	// if map and graph are defined we should re-init them!
-	try {
+	if ( DEBUG ) try {
 		main( input );
 	} catch ( err ) {
-		oer = err;
-		var txt = "There was an error on this page.\n\n";
-		txt += "Error description: " + err;
-		if ( DEBUG ) error( txt );
-	}
+		error( txt );
+	} else main( input );
 }
 
 /**
@@ -159,11 +155,24 @@ function marker( point, title, description, src, extra ) {
 	}
 }
 
+/* Chart drawing primitives */
+
+function table( absicssa, ordinates ) {
+	var table = new google.visualization.DataTable();
+	table.addColumn( 'string', absicssa );
+	for ( var i = 0; i < ordinates.length; i++ )
+		table.addColumn( 'number', ordinates[ i ] );
+	return table;
+}
+
 function draw( data ) {
 	var chart = new google.visualization.LineChart( document.getElementById( 'chart' ) );
 	chart.draw( data, { curveType: "none", width: 400, height: 200 } );
 }
 
+/**
+	Returns images metadata as an XML DOM element.
+*/
 function loadMetadata() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open( 'GET', '/img/metadata', false );
