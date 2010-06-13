@@ -1,180 +1,207 @@
+=============================
 Learning Week DiCO DSI (2009)
 =============================
 
-Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
-il file
+Come usare il server
+--------------------
 
-	http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist.zip
+Il funzionamento del server **learning week** si basa su tre zip file:
 
-Potete viceversa ottenere il "sorgente" (la versione "di sviluppo") sia usando
-Mercurial, con il comando
+- ``server.zip``,
+- ``data.zip``,
+- ``code.zip``,
 
-	hg clone https://mapio@bitbucket.org/mapio/lw09-dico-dsi
-
-oppure scaricando (e scompattando) lo zip file all'indirizzo
-
-	http://bitbucket.org/mapio/lw09-dico-dsi/get/tip.zip
-
-a questo punto, usando lo script
-
-	./bin/dist
-	
-potete produrre il file dist.zip descritto in seguito.
-
-Il funzionamento del server si basa su tre zip file
-
-	server.zip
-	data.zip
-	code.zip
-
-(di cui il primo Ë da non modificare, mentre gli ultimi due sono opzionali)
 che contengono rispettivamente:
 
-	il codice dell'applicazione (ed alcune applicazioni utente di esempio)
-	le immagini ed i metadati relativi
-	il codice delle *applicazioni utente* e le relative configurazioni
+- il materiale necessario all'esecuzione del *server*,
+- le *immagini* ed i *metadati* relativi,
+- il *codice* delle **applicazioni utente** e le relative *configurazioni*;
 
-Nel file dist.zip, oltre a server.zip, sono presenti i file
+il primo √® il software del server e non deve essere modificato, mentre gli
+ultimi due servono ad archiviare i dati utente, possono essere inizialmente
+assenti (ma vengono in ogni caso creati al termine dell'esecuzione del server)
+e possono essere manualmente modificati (quando il server non √® attivo, ad
+esempio, scompattandoli, modificando i file che contengono e quindi
+ricompattandoli).
 
-	run.bat
+Per facilitare l'uso del server sotto Windows viene fornito anche lo script
 
-che serve ad eseguire l'applicazione sotto Windows ed i file
+- ``run.bat``
 
-	flikr.zip
-	example.zip
+e due versioni di ``data.zip`` che contengono alcune immagini (e relativi
+metadati) pronte per l'uso.
 
-che sono due "versioni" di data.zip che contengono, rispettivamente, alcune
-centinaia di immagini scaricate da Flikr (geotaggate, ma non annotate) e tre
-immagini campione (con geotag ed annotazioni); se si intende usare uno di
-questi insiemi di immagini Ë sufficiente rinominare il relativo file come
-data.zip. Tali file possono anche essere decompressi per accedere alle sole
-immagini che contengono.
-
-Per eseguire il server Ë sufficiente aver installato Python 2.6, mettere tutti
+Per eseguire il server √® sufficiente aver installato Python 2.6, mettere tutti
 i file necessari descritti sopra nella stessa cartella e
 
-	usando Windows, fare doppio click sull'icona di run.bat,
-	usando Linux, dare il comando "python2.6 server.zip" (senza virgolette).
+- usando Windows, fare doppio click sull'icona di ``run.bat``,
+- usando Linux, dare il comando ``python2.6 server.zip``.
 
 Una volta posto in esecuzione il server, tutte le operazioni possono essere
 effettuate puntando un browser (Firefox, o Chrome) all'indirizzo
 
 	http://localhost:8000/
 
-al termine del lavoro Ë necessario arrestare il server usando l'apposito link
+al termine del lavoro √® necessario arrestare il server usando l'apposito link
 presente su tale pagina, il che corrisponde ad accedere all'indirizzo
 
 	http://localhost:8000/halt
 
-Al termine dell'esecuzione del server vengono salvate in data.zip le immagini
-(e metadati) aggiunti tramite l'applicazione di tagging, mentre in code.zip
-viene salvato il codice (e configurazioni) delle applicazioni utente.
+Al termine dell'esecuzione del server vengono salvate in ``data.zip`` le
+immagini (e metadati) aggiunti tramite l'applicazione di tagging, mentre in
+``code.zip`` viene salvato il codice (e configurazioni) delle applicazioni
+utente.
 
 Si osservi che il codice e le configurazioni delle applicazioni utente
-presenti in code.zip *adombrano* le rispettive versioni "originali" contenute
-in server.zip; per "ripristinare" queste ultime Ë perÚ sufficiente eliminare
-(o rinominare), il file code.zip.
+presenti in ``code.zip`` *adombrano* le rispettive versioni "originali"
+contenute in ``server.zip``; per "ripristinare" queste ultime √® per√≤
+sufficiente eliminare (o rinominare), il file ``code.zip``.
+
+
+Come ottenere il materiale
+--------------------------
+
+Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
+(e salvando nella medesima cartella, senza scompattazione) il file:
+
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/server.zip
+
+e, se usate Windows, il file:
+
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/run.bat
+
+cui potete aggiungere uno dei due file:
+
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/flikr/data.zip, o
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/example/data.zip.
+
+che sono due "versioni" di data.zip che contengono, rispettivamente, alcune
+centinaia di immagini scaricate da Flikr (geotaggate, ma non annotate) e tre
+immagini campione (con geotag ed annotazioni). Si osserva che tali file
+possono anche essere decompressi per accedere alle sole immagini che
+contengono.
+
+La versione di sviluppo
+```````````````````````
+
+Potete viceversa ottenere il "sorgente" (la versione "di sviluppo") sia usando
+Mercurial, con il comando
+
+	``hg clone https://bitbucket.org/mapio/lw09-dico-dsi``
+
+oppure scaricando (e scompattando) lo zip file all'indirizzo
+
+	http://bitbucket.org/mapio/lw09-dico-dsi/get/tip.zip
+
+a questo punto, usando lo script ``./bin/run`` potete produrre i file
+necessari ed avviare il server.
 
 
 Applicazioni utente
 -------------------
 
-Il meccanismo delle applicazioni utente Ë molto limitatamente estensibile.
+Il meccanismo delle *applicazioni utente* √® limitatamente estensibile.
 
-Vengono fornite una serie di applicazioni di esempio (in server.zip) il cui
-codice Javascript puÚ essere semplicemente modificato tramite il server.
+Vengono fornite una serie di applicazioni di esempio (in ``server.zip``) il
+cui codice Javascript pu√≤ essere semplicemente modificato tramite il server.
 
 Se si vuole aggiungere una nuova applicazione, si possono presentare due casi:
 
-	l'applicazione si bassa su un template esistente,
-	l'applicazione necessita di un template apposito.
+- l'applicazione si bassa su un template esistente,
+- l'applicazione necessita di un template apposito.
 
-Nel primo caso, Ë sufficiente manipolare code.zip (ossia basta decomprimerlo,
-effettuare le modifiche descritte di seguito, e ricomprimerlo) come segue:
+Nel primo caso, √® sufficiente manipolare ``code.zip`` (ossia basta
+decomprimerlo, effettuare le modifiche descritte di seguito, e ricomprimerlo)
+come segue:
 
-1) va aggiunto un file 
+1. va aggiunto un file 
 
-	code/<nome_app>.js
+	``code/<nome_app>.js``
 
-contenente la versione iniziale (eventualmente vuota) del codice
-dell'applicazione,
+  contenente la versione iniziale (eventualmente vuota) del codice
+  dell'applicazione,
 
-2) va aggiunta una sezione [nome_app] al file di configurazione code/apps.cfg
-che contenga i seguenti campi:
+2. va aggiunta una sezione ``[nome_app]`` al file di configurazione
+   ``code/apps.cfg`` che contenga i seguenti campi:
 
-	title: una breve descrizione dell'applicazione,
-	template: il nome del template per il body della pagina html dell'applicazione,
-	javascript: un elenco (opzionale, separato da spazi) di file di codice.
+	:title: 
+		una breve descrizione dell'applicazione,
+	:template: 
+		il nome del template per il body della pagina html dell'applicazione,
+	:javascript: 
+			un elenco (opzionale, separato da spazi) di file di codice.
 
-Il template Ë da indicare come basename di uno dei file presenti nella
-directory
+  Il template √® da indicare come basename di uno dei file presenti nella
+  directory
 
-	resources/templates/
+	``resources/templates/``
 
-contenuta in server.zip, mentre i file di codice da elencare devono essere
-indicati come basename di file presenti nella directory
+  contenuta in ``server.zip``, mentre i file di codice da elencare devono
+  essere indicati come basename di file presenti nella directory
 
-	code/
+	``code/``
 
-contenuta in code.zip (oppure di resources/ in server.zip); in particolare
-sono inclusi di default nell'elenco il file di codice dell'applicazione (di
-cui al punto 1) e la libreria
+  contenuta in ``code.zip`` (oppure di ``resources/`` in ``server.zip``); in
+  particolare sono inclusi di default nell'elenco il file di codice
+  dell'applicazione (di cui al punto 1) e la libreria
 
-	resources/static/applib.js
+	``resources/static/applib.js``
 
-In fine, sono messe a disposizione due macro %(GMAP_JS)s e %(GCHART_JS)s che
-espandono rispettivamente al codice per le mappe e i grafici delle API di
-Google.
+In fine, sono messe a disposizione due macro ``%(GMAP_JS)s`` e
+``%(GCHART_JS)s`` che espandono rispettivamente al codice per le mappe e i
+grafici delle API di Google.
 
-Nel secondo caso, in cui non si voglia usare uno tra i template predisposti, Ë
+Nel secondo caso, in cui non si voglia usare uno tra i template predisposti, √®
 necessario aggiungere ai passi precedenti la seguente manipolazione del file
-server.zip (sempre ottenibile decomprimendo e quindi ricomprimendo il
+``server.zip`` (sempre ottenibile decomprimendo e quindi ricomprimendo il
 medesimo):
 
-0) va aggiunto un file
+3. va aggiunto un file
 
-	resources/tempaltes/<nome_template>.html
+	``resources/tempaltes/<nome_template>.html``
 
-contenente un template (nel senso di uno string.Template di Python) per il
-body dell'applicazione.
+  contenente un template (nel senso di uno ``string.Template`` di Python) per
+  il body dell'applicazione.
 
 
 Applib e template
 -----------------
 
-La libreria applib.js ed i template io.html e map.html consentono di
+La libreria ``applib.js`` ed i template ``io`` e ``map`` consentono di
 sviluppare semplici applicazioni che svolgnono rispettivamente I/O di testo
-(tramite una form html) e manipolano una Google map.
+(tramite una *form* HTML) e manipolano una *Google Map*.
 
-Il template "io" prevede che l'applicazione implementi almeno due funzioni:
+Il template ``io`` prevede che l'applicazione implementi almeno due funzioni:
 
-	init,
-	main;
+- ``init`` e
+- ``main``;
 
-La prima viene chiamata all'onload della pagina, mentre la seconda viene
-chiamata alla pressione del bottone presente nella pagina (e riceve come
-argomento i valori presenti nella form, convertiti al tipo richiesto).
+la prima viene chiamata all'``onload`` della pagina, mentre la seconda viene
+chiamata alla pressione del bottone "Esegui il programma" presente nella
+pagina (e riceve come argomento i valori presenti nella *form*, convertiti al
+tipo indicato all'atto della loro creazione). C'√® un meccanismo di *logging*
+che pu√≤ supportare lo sviluppo, cos√¨ come altri *gadget* che consentono l'uso
+di semlici mappe o grafici (basati su *Google Chart*).
 
-Il template "map" prevede che l'applicazione implementi la funzione 
+Il template ``map`` prevede che l'applicazione implementi la funzione 
 
-	init
+- ``init``
 
-che viene chiamata all'onload della pagina e puÚ fare affidamento che sia gi‡
-stata inizializzata una Google map (accessibile tramite l'oggetto map, o con
-appositi metodi di convenienza per punnti e marker).
+che viene chiamata all'``onload`` della pagina e pu√≤ fare affidamento che sia
+gi√† stata inizializzata una *Google Map* (accessibile tramite l'oggetto
+``map``, o con appositi metodi di convenienza per punnti e marker).
 
 Si suggerisce di fare riferimento alle applicazioni di esempio per avere
 qualche informazione sul loro funzionamento. Al momento manca una
-documentazione pi˘ specifica.
+documentazione pi√π specifica.
 
 
 Librerie esterne
 ----------------
 
-Questo software Ë basato, ed include, le seguenti librerie:
+Questo software √® basato, ed include, le seguenti librerie:
 
-CodeMirror, available at http://marijn.haverbeke.nl/codemirror/
-EXIF.py, available at http://sourceforge.net/projects/exif-py/
-fvlogger, abailable at http://www.fivevoltlogic.com/code/fvlogger/
-Javascipt Shell, available at http://www.squarefree.com/shell/
-
+- CodeMirror, available at http://marijn.haverbeke.nl/codemirror/,
+- EXIF.py, available at http://sourceforge.net/projects/exif-py/,
+- fvlogger, abailable at http://www.fivevoltlogic.com/code/fvlogger/,
+- Javascipt Shell, available at http://www.squarefree.com/shell/.
