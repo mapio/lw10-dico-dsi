@@ -147,9 +147,9 @@ come segue:
 
 	``resources/static/applib.js``
 
-In fine, sono messe a disposizione due macro ``%(GMAP_JS)s`` e
-``%(GCHART_JS)s`` che espandono rispettivamente al codice per le mappe e i
-grafici delle API di Google.
+  In fine, sono messe a disposizione due macro ``%(GMAP_JS)s`` e
+  ``%(GCHART_JS)s`` che espandono rispettivamente al codice per le mappe e i
+  grafici delle API di Google.
 
 Nel secondo caso, in cui non si voglia usare uno tra i template predisposti, è
 necessario aggiungere ai passi precedenti la seguente manipolazione del file
