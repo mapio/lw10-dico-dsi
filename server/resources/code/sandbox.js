@@ -1,3 +1,5 @@
+// Usa questa applicazione per sperimentare liberamente!
+
 DEBUG = true;
 
-// Usa questa applicazione per sperimentare liberamente!
+function init() {}
