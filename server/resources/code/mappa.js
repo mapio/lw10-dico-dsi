@@ -9,7 +9,6 @@ function estrai( point, tagname ) {
 	if ( ! elem ) return undefined;
 	var fc = elem[ 0 ].firstChild;
 	if ( ! fc ) return undefined;
-	alert( fc.nodeValue );
 	return fc.nodeValue;
 }
 
