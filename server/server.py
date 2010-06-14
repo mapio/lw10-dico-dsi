@@ -18,6 +18,7 @@
 from cgi import FieldStorage, escape
 from logging import getLogger
 from mimetypes import guess_type
+from re import sub
 from wsgiref.util import request_uri as wsgi_request_uri
 
 LOGGER = getLogger( "server.server" )
@@ -136,7 +137,7 @@ def handle_tag():
 def application( environ, start_response ):
 	global request_method, request_uri, request_uri_parts, post_data, __start_response 
 	request_method = environ[ 'REQUEST_METHOD' ]
-	request_uri = wsgi_request_uri( environ )
+	request_uri = sub( r'([^:])/+', r'\1/', sub( r'(\?|#).*$', '', wsgi_request_uri( environ ) ) ) # we remove the query and anchor part
 	request_uri_parts = request_uri.rstrip( '/' ).split( '/' )[ 3 : ]
 	post_data = FieldStorage( fp = environ[ 'wsgi.input' ], environ = environ, keep_blank_values = 1 ) if request_method == 'POST' else None
 	__start_response = start_response
