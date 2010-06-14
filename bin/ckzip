@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echocol () {
+  echo -e "\033[31m${0##*/}: $@\033[0m"
+}
+
+cd ./dist
+
+echocol "contenuto di data.zip"
+
+unzip -l data.zip
+
+echocol "dump dei metadati"
+
+unzip -p data.zip data/metadata.kml | xmllint --format -
+
+echocol "contenuto di code.zip"
+
+unzip -l code.zip
+
+echocol "dump delle configurazioni"
+
+unzip -p code.zip code/apps.cfg

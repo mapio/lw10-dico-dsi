@@ -1,0 +1,44 @@
+<body onload="_init()">
+	<form method="post" action="#">
+		<fieldset><legend>Input</legend>
+			<div id="input"></div>
+			<div>
+				<input type="button" value="Esegui il programma" onclick="_main()"/>
+				<a href="#" onclick="_edit()">Passa all'editor</a>
+			</div>	
+		</fieldset>
+		<fieldset><legend>Output</legend>
+			<textarea id='output' cols='60' rows='10' readonly='readonly' ></textarea>
+		</fieldset>
+		<fieldset id="mapfs" style="display: none"><legend>Mappa</legend>
+			<div id="map" style="height: 200px; width:400px; border: 1px solid black;"></div>
+		</fieldset>
+		<fieldset id="chartfs" style="display: none"><legend>Grafico</legend>
+			<div id="chart" style="height: 200px; width:400px; border: 1px solid black;"></div>
+		</fieldset>
+	</form>
+	<div id="fvlogger" style="display: none">
+		<dl>
+		<dt>logger</dt>
+		<dd class="all">
+			<a href="#fvlogger" onclick="showAll();" title="show all">all</a>
+		</dd>
+		<dd class="debug">
+			<a href="#fvlogger" onclick="showDebug();" title="show debug">debug</a>
+		</dd>
+		<dd class="info">
+			<a href="#fvlogger" onclick="showInfo();" title="show info">info</a>
+		</dd>
+		<dd class="warn">
+			<a href="#fvlogger" onclick="showWarn();" title="show warnings">warn</a>
+		</dd>
+		<dd class="error">
+			<a href="#fvlogger" onclick="showError();" title="show errors">error</a>
+		</dd>
+		<dd class="fatal">
+			<a href="#fvlogger" onclick="showFatal();" title="show fatals">fatal</a>
+		</dd>
+		</dl>
+	</div>
+	<p><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></p>
+</body>
