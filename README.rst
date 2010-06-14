@@ -98,10 +98,15 @@ necessari ed avviare il server.
 
 
 **Versione beta**: c'è una versione di sviluppo (circa la quale non si
-garantisce nulla) che corrispnde al branch ``devel`` di Mercurial, o che può
-essere scaricata come zip file all'indirizzo
+garantisce nulla) che corrispnde al branch ``devel`` di Mercurial, ottenibile
+usando Mercurial con
+
+	``hg clone -b devel https://bitbucket.org/mapio/lw09-dico-dsi lw09-dico-dsi-devel``
+
+o che può essere scaricata come zip file all'indirizzo
 
 	http://bitbucket.org/mapio/lw09-dico-dsi/get/devel.zip
+
 
 Applicazioni utente
 -------------------
@@ -168,6 +173,13 @@ medesimo):
 
   contenente un template (nel senso di uno ``string.Template`` di Python) per
   il body dell'applicazione.
+
+**Aggiunta automatica**: è prevista la possibilità di aggiungere una
+applicazione basata sul template ``io`` tramite il server stesso, si osserva
+però che una volta fatta l'aggiunta le successive modifiche (fatta esclusione
+per il codice dell'applicazione che è editabile via server) dovranno essere
+fatte manualmente tramite la manipolazioni del file ``code.zip`` descritte in
+precedenza.
 
 
 Applib e template
