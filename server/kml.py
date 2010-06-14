@@ -20,7 +20,7 @@ from io import BytesIO
 from logging import getLogger
 from xml.dom.minidom import Document, parseString
 
-LOGGER = getLogger( "server.kml" )
+LOGGER = getLogger( 'server.kml' )
 
 from exif import process_file
 
