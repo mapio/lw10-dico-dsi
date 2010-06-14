@@ -32,7 +32,7 @@ function init() {
 
 function load() {
 	var xhr = new XMLHttpRequest();
-	xhr.open( 'GET', document.URL.replace( /\/+$/, '' ) + '/load', false );
+	xhr.open( 'GET', document.URL.replace( /(\?|#).*$/, '' ).replace( /([^:])\/+/g, '$1/' ) + '/load', false );
 	xhr.send( null );
 	return xhr.responseText;
 }

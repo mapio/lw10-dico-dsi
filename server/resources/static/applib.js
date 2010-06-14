@@ -138,6 +138,8 @@ function output( str, label ) {
     outputta.value += ( label === undefined ? '' : label ) + str + '\n';
 }
 
+/* Google Map primitives */ 
+
 function marker( point, title, description, src, extra ) {
 	if ( ! map ) return;
 	if ( title === undefined ) title = '';
@@ -155,7 +157,7 @@ function marker( point, title, description, src, extra ) {
 	}
 }
 
-/* Chart drawing primitives */
+/* Google Chart primitives */
 
 function table( absicssa, ordinates ) {
 	var table = new google.visualization.DataTable();
