@@ -64,16 +64,16 @@ Come ottenere il materiale
 Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
 (e salvando nella medesima cartella, senza scompattazione) il file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/server.zip
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/server.zip
 
 e, se usate Windows, il file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/run.bat
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/run.bat
 
 cui potete aggiungere uno dei due file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/flikr/data.zip, o
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/tip/dist/example/data.zip.
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/flikr/data.zip, o
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/example/data.zip.
 
 che sono due "versioni" di data.zip che contengono, rispettivamente, alcune
 centinaia di immagini scaricate da Flikr (geotaggate, ma non annotate) e tre
@@ -91,11 +91,17 @@ Mercurial, con il comando
 
 oppure scaricando (e scompattando) lo zip file all'indirizzo
 
-	http://bitbucket.org/mapio/lw09-dico-dsi/get/tip.zip
+	http://bitbucket.org/mapio/lw09-dico-dsi/get/default.zip
 
 a questo punto, usando lo script ``./bin/run`` potete produrre i file
 necessari ed avviare il server.
 
+
+**Versione beta**: c'è una versione di sviluppo (circa la quale non si
+garantisce nulla) che corrispnde al branch ``devel`` di Mercurial, o che può
+essere scaricata come zip file all'indirizzo
+
+	http://bitbucket.org/mapio/lw09-dico-dsi/get/devel.zip
 
 Applicazioni utente
 -------------------
