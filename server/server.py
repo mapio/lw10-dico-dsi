@@ -34,6 +34,24 @@ stop = False
 
 __start_response = None
 
+def handle_addapp():
+	if request_method == 'POST':
+		try:
+			javascript = [ _.value for _ in post_data[ 'javascript' ] ]
+		except ( TypeError, KeyError ): # not iterable, at most one value
+			try:
+				javascript = post_data[ 'javascript' ].value
+			except KeyError: # no value present
+				javascript = []
+		templates.addioapp( 
+			app = post_data[ 'key' ].value, 
+			title = post_data[ 'title' ].value.decode( 'utf8' ),
+			javascript = javascript
+		)
+		return html( 'appscfg', appscfg = resources.load_appscfg() )
+	else:
+		return html( 'addapp' )
+		
 def handle_edit():
 	try:
 		name = request_uri_parts.pop( 0 )
@@ -58,7 +76,7 @@ def handle_halt():
 def handle_home():
 	apps = []
 	for k in templates.USER_APPS:
-		apps.append( '<li>{0}: <a href="http://localhost:8000/edit/{1}">edit</a>, <a href="http://localhost:8000/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
+		apps.append( '<li>{0}: <a href="/edit/{1}">edit</a>, <a href="/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
 	return html( 'home', apps = '\n'.join( apps ) )
 	
 def handle_img():

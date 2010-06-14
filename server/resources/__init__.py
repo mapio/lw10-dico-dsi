@@ -74,8 +74,11 @@ def load_metadata():
 def save_metadata( string ):
 	__data[ 'data/metadata.kml' ] = string
 
-def load_userappsconfig():
+def load_appscfg():
 	return __data[ 'code/apps.cfg' ]
+
+def append_appscfg( string ):
+	__data[ 'code/apps.cfg' ] += string
 
 def dump():
 	def zip( path, must_write ):
