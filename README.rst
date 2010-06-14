@@ -26,7 +26,7 @@ ricompattandoli).
 
 Per facilitare l'uso del server sotto Windows viene fornito anche lo script
 
-- ``run.bat``
+- ``run.pyw``
 
 e due versioni di ``data.zip`` che contengono alcune immagini (e relativi
 metadati) pronte per l'uso.
@@ -34,7 +34,7 @@ metadati) pronte per l'uso.
 Per eseguire il server è sufficiente aver installato Python 2.6, mettere tutti
 i file necessari descritti sopra nella stessa cartella e
 
-- usando Windows, fare doppio click sull'icona di ``run.bat``,
+- usando Windows, fare doppio click sull'icona di ``run.pyw``,
 - usando Linux, dare il comando ``python2.6 server.zip``.
 
 Una volta posto in esecuzione il server, tutte le operazioni possono essere
@@ -68,7 +68,7 @@ Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
 
 e, se usate Windows, il file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/run.bat
+- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/run.pyw
 
 cui potete aggiungere uno dei due file:
 
