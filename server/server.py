@@ -21,7 +21,7 @@ from mimetypes import guess_type
 from re import sub
 from wsgiref.util import request_uri as wsgi_request_uri
 
-LOGGER = getLogger( "server.server" )
+LOGGER = getLogger( 'server.server' )
 
 import kml
 import resources

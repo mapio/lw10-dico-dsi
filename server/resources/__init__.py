@@ -21,7 +21,7 @@ from string import Template
 from sys import argv
 from zipfile import ZipFile, BadZipfile
 
-LOGGER = getLogger( "server.resources" )
+LOGGER = getLogger( 'server.resources' )
 
 __data = dict()
 
