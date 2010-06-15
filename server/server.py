@@ -16,6 +16,7 @@
 # along with lw09-dico-dsi.  If not, see <http://www.gnu.org/licenses/>.
 
 from cgi import FieldStorage, escape
+from itertools import groupby
 from logging import getLogger
 from mimetypes import guess_type
 from re import sub
@@ -75,9 +76,19 @@ def handle_halt():
 	return http( 200, 'Server halted.' )
 
 def handle_home():
-	apps = []
-	for k in templates.USER_APPS:
-		apps.append( '<li>{0}: <a href="/edit/{1}">edit</a>, <a href="/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
+	def key( app ):
+		sk = templates.ALL[ app ].sortkey
+		if not sk: return 0, templates.ALL[ app ].title
+		sks = sk.split( '-' )
+		if len( sks ) == 1: return 1, sk, sk
+		return 2, sks[ 0 ], sks[ 1 ]
+	apps = [ '<dl>' ]
+	for gk, g in groupby( sorted( templates.USER_APPS, key = key ), key = lambda app : key( app )[ : -1 ] ):
+		apps.append( '<dt style="font-weight: bolder;">{0}</dt><dd><ol>'.format( templates.KEY_MAP[ gk[ 1 ] ].encode( 'utf8' ) if len( gk ) > 1 else 'Miscellanea' ) )
+		for k in g:
+			apps.append( '<li>{0}: <a href="/edit/{1}">edit</a>, <a href="/run/{1}">run</a></li>'.format( templates.ALL[ k ].title, k ) )
+		apps.append( '</ol></dd>')	
+	apps.append( '</dl>' )
 	return html( 'home', apps = '\n'.join( apps ) )
 	
 def handle_img():
