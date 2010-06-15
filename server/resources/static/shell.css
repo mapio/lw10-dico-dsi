@@ -1,0 +1,12 @@
+body { background: white; color: black; font-family: Sans-Serif; }
+
+#output { white-space: pre; white-space: -moz-pre-wrap; } /* Preserve line breaks, but wrap too if browser supports it */
+#input { width: 100%; border: none; overflow: auto; font-size: medium;}
+
+.input { color: blue; background: white; font-family: Sans-Serif; font-weight: bold; }
+.normalOutput { color: black; background: white; }
+.print { color: brown; background: white; }
+.error { color: red; background: white; }
+.propList { color: green; background: white; }
+.message { color: green; background: white; }
+.tabcomplete { color: purple; background: white; }
