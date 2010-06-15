@@ -64,16 +64,16 @@ Come ottenere il materiale
 Potete ottenere una distribuzione "pronta per l'uso" del software scaricando
 (e salvando nella medesima cartella, senza scompattazione) il file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/server.zip
+- http://bitbucket.org/mapio/lw10-dico-dsi/raw/default/dist/server.zip
 
 e, se usate Windows, il file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/run.pyw
+- http://bitbucket.org/mapio/lw10-dico-dsi/raw/default/dist/run.pyw
 
 cui potete aggiungere uno dei due file:
 
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/flikr/data.zip, o
-- http://bitbucket.org/mapio/lw09-dico-dsi/raw/default/dist/example/data.zip.
+- http://bitbucket.org/mapio/lw10-dico-dsi/raw/default/dist/flikr/data.zip, o
+- http://bitbucket.org/mapio/lw10-dico-dsi/raw/default/dist/example/data.zip.
 
 che sono due "versioni" di data.zip che contengono, rispettivamente, alcune
 centinaia di immagini scaricate da Flikr (geotaggate, ma non annotate) e tre
@@ -87,11 +87,11 @@ La versione di sviluppo
 Potete viceversa ottenere il "sorgente" (la versione "di sviluppo") sia usando
 Mercurial, con il comando
 
-	``hg clone https://bitbucket.org/mapio/lw09-dico-dsi``
+	``hg clone https://bitbucket.org/mapio/lw10-dico-dsi``
 
 oppure scaricando (e scompattando) lo zip file all'indirizzo
 
-	http://bitbucket.org/mapio/lw09-dico-dsi/get/default.zip
+	http://bitbucket.org/mapio/lw10-dico-dsi/get/default.zip
 
 a questo punto, usando lo script ``./bin/run`` potete produrre i file
 necessari ed avviare il server.
@@ -101,11 +101,11 @@ necessari ed avviare il server.
 garantisce nulla) che corrispnde al branch ``devel`` di Mercurial, ottenibile
 usando Mercurial con
 
-	``hg clone -b devel https://bitbucket.org/mapio/lw09-dico-dsi lw09-dico-dsi-devel``
+	``hg clone -b devel https://bitbucket.org/mapio/lw10-dico-dsi lw10-dico-dsi-devel``
 
 o che può essere scaricata come zip file all'indirizzo
 
-	http://bitbucket.org/mapio/lw09-dico-dsi/get/devel.zip
+	http://bitbucket.org/mapio/lw10-dico-dsi/get/devel.zip
 
 
 Applicazioni utente
