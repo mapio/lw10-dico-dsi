@@ -1,0 +1,6 @@
+This is the developement version. Use at your onw risk!
+
+TODO
+====
+
+* check if the README reported on the bitbucket page is the tip, or what…
