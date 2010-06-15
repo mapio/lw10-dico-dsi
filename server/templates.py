@@ -46,7 +46,7 @@ uac.readfp( StringIO( resources.load_appscfg().decode( 'utf8' ) ) )
 USER_APPS = set( uac.sections() ) - set( [ 'Sort Key Map' ] )
 for app in USER_APPS:
 	js = uac.get( app, 'javascript' ).split() if uac.has_option( app, 'javascript' ) else []
-	js.extend( [ '/static/applib.js', '/static/fvlogger/logger.js', '/edit/{0}/load'.format( app ) ] )
+	js.extend( [ '/static/libapp.js', '/static/fvlogger/logger.js', '/edit/{0}/load'.format( app ) ] )
 	sk = uac.get( app, 'sortkey' ) if uac.has_option( app, 'sortkey' ) else None
 	ALL[ app ] = AppTemplate( uac.get( app, 'title' ).encode( 'utf8' ), uac.get( app, 'template' ), js, [ '/static/fvlogger/logger.css' ], sk )
 
@@ -77,7 +77,7 @@ def addioapp( app, title, javascript ):
 	if 'chart' in javascript: 
 		jslibs.append( GCHART_JS )
 		jstext.append( '%(GCHART_JS)s' )
-	jslibs.extend( [ '/static/applib.js', '/static/fvlogger/logger.js', '/edit/{0}/load'.format( app ) ] )
+	jslibs.extend( [ '/static/libapp.js', '/static/fvlogger/logger.js', '/edit/{0}/load'.format( app ) ] )
 	ALL[ app ] = AppTemplate( title.encode( 'utf8' ), 'io', jslibs, [ '/static/fvlogger/logger.css' ], '__auto__' )
 	USER_APPS.add( app )
 	resources.append_appscfg( addioapp.t.substitute( app = app, title = title.encode( 'utf8' ), javascript = '\njavascript: ' + ' '.join( jstext ) + '\n' if javascript else '' ) ) 
