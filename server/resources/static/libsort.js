@@ -9,6 +9,8 @@ function tstop() {
 
 function a_caso( n, min, max ) {
 	var res = [];
+	if ( min === undefined ) min = 0;
+	if ( max === undefined ) max = n;
 	for ( var i = 0; i < n; i++ ) res.push( Math.floor( Math.random() * ( max - min ) + min ) );
 	return res;  
 }
