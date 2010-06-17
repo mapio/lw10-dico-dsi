@@ -2,4 +2,4 @@
 
 rm -f ./dist/server.zip
 cd server
-zip -r9 --exclude=\*.svn\* --exclude=\*\~ ../dist/server.zip * >/dev/null 2>&1
+zip -r9 ../dist/server.zip * >/dev/null 2>&1

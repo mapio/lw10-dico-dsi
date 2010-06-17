@@ -140,6 +140,11 @@ function output( str, label ) {
 
 /* Google Map primitives */ 
 
+function number_marker( marker, num ) {
+	var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + num + "|00ffff|000000";
+	marker.setIcon( icon );
+}
+
 function marker( point, title, description, src, extra ) {
 	if ( ! map ) return;
 	if ( title === undefined ) title = '';
@@ -155,6 +160,7 @@ function marker( point, title, description, src, extra ) {
 			infowindow.open( map, marker );
 		} );
 	}
+	return marker;
 }
 
 /* Google Chart primitives */
