@@ -15,6 +15,12 @@ function a_caso( n, min, max ) {
 	return res;  
 }
 
+function ordinato( a ) {
+	for ( var i = 0; i < a.length - 1; i++ )
+		if ( a[ i ] > a[ i + 1 ] ) return false;
+	return true;
+}
+
 function metti( arr, elem ) {
 	arr.push( elem );
 }

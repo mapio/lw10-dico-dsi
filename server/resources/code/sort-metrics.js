@@ -1,17 +1,11 @@
 DEBUG = true;
 
-function ordinato( a ) {
-	for ( var i = 0; i < a.length - 1; i++ )
-		if ( a[ i ] > a[ i + 1 ] ) return false;
-	return true;
-}
-
 function init() {
 	input_ints( 1, 'numero di prove' );
 }
 
 function main( input ) {
-	var data = table( 'N', [ 'mergesort', 'selectionsort' ] );
+	var data = table( 'N', [ 'mergesort', 'selectionsort', 'bubblesort' ] );
 	var len = 100;
 	var a, b, t0, t1;
 	for ( var prove = input[ 0 ]; prove; prove-- ) {
@@ -26,7 +20,12 @@ function main( input ) {
 		b = selection_sort( a );
 		t1 = tstop();
 		if ( ! ordinato( b ) ) error( "selection_sort non ordinato: " + b );
-		data.addRow( [  "" + len, t0, t1 ] );
+		a = a_caso( len, 0, 10 * len );
+		tstart();
+		b = bubble_sort( a );
+		t2 = tstop();
+		if ( ! ordinato( b ) ) error( "bubble_sort non ordinato: " + b );
+		data.addRow( [  "" + len, t0, t1, t2 ] );
 	}
 	draw( data );
 }
