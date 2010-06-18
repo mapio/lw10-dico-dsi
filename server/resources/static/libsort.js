@@ -21,8 +21,7 @@ function metti( arr, elem ) {
 }
 
 function togli( arr, idx ) {
-	if ( idx === undefined )
-		return arr.shift();
+	if ( idx === undefined ) return arr.shift();
 	else 
 	var val = arr.splice( idx, 1 );
 	return val[ 0 ];
