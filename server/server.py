@@ -127,6 +127,8 @@ def handle_tag():
 	else: stage = request_uri_parts.pop( 0 )
 	if stage == 'upload':
 		return html( 'upload' )
+	elif stage == 'uploadpwd':
+		return html('uploadpwd')
 	elif stage  == 'add':
 		if not post_data[ 'file_field' ].filename: return html( 'upload' )
 		data = post_data[ 'file_field' ].file.read()
@@ -135,6 +137,14 @@ def handle_tag():
 		point = kml.extract_lat_lon( data )
 		kml.append( kml.placemark( point ) )
 		return html( 'metadata', num = num, lat = point.lat, lon = point.lon )
+	elif stage  == 'addpwd':
+		if not post_data[ 'file_field' ].filename: return html( 'uploadpwd' )
+		data = post_data[ 'file_field' ].file.read()
+		num = len( kml.placemarks )
+		resources.save_image( num, data )
+		point = kml.extract_lat_lon( data )
+		kml.append( kml.placemark( point ) )
+		return html( 'metadatapwd', num = num, lat = point.lat, lon = point.lon )
 	elif stage == 'metadata':
 		data = post_data
 		placemark = kml.placemarks[ int( request_uri_parts[ 0 ] ) ]
@@ -142,6 +152,14 @@ def handle_tag():
 		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 		placemark.appendChild( kml.description( data[ 'description' ].value ) )
 		return html( 'confirm', placemark = escape( placemark.toprettyxml() ) )
+	elif stage == 'metadatapwd':
+		data = post_data
+		placemark = kml.placemarks[ int( request_uri_parts[ 0 ] ) ]
+		placemark.appendChild( kml.name( data[ 'name' ].value ) )
+		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
+		placemark.appendChild( kml.description( data[ 'description' ].value ) )
+		return html( 'confirm', placemark = escape( placemark.toprettyxml() ) )
+
 	else:
 		return http( 400, 'Tag application error (this should never happen).' )
 
