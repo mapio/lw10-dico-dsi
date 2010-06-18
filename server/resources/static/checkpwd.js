@@ -1,3 +1,16 @@
+function checkpwd(){
+    if (SHA1(document.getElementById('pwd').value) 
+	== 'b3c8a9b5a8ca17d0b2a8e8540c196f21010a26e1')
+	return true;
+    return false;
+}
+
+function checkpwdsimple(){
+    if (document.getElementById('pwd').value == 'pippo')
+	return true;
+    return false;
+}
+
 /**
 *
 *  Secure Hash Algorithm (SHA1)
@@ -56,8 +69,7 @@ function SHA1 (msg) {
 			}
 			else {
 				utftext += String.fromCharCode((c >> 12) | 224);
-				utftext += String.f
-     0K .romCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
 			}
 
@@ -118,7 +130,7 @@ function SHA1 (msg) {
 		for( i=0; i<16; i++ ) W[i] = word_array[blockstart+i];
 		for( i=16; i<=79; i++ ) W[i] = rotate_left(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
 
-		A = H0;.
+		A = H0;
 		B = H1;
 		C = H2;
 		D = H3;
@@ -171,18 +183,5 @@ function SHA1 (msg) {
 	var temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
 
 	return temp.toLowerCase();
-}
 
-
-function checkpwd(){
-    if (SHA1(document.getElementById('pwd').value) 
-	== 'b3c8a9b5a8ca17d0b2a8e8540c196f21010a26e1')
-	return true;
-    return false;
-}
-
-function checkpwdsimple(){
-    if (document.getElementById('pwd').value == 'pippo')
-	return true;
-    return false;
 }

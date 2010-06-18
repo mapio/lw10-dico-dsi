@@ -32,7 +32,7 @@ __SYSTEM = {
 	'upload': AppTemplate( 'Upload', 'upload', None, None, None ),
 	'uploadpwd': AppTemplate( 'Upload', 'uploadpwd', None, None, None ),
 	'metadata': AppTemplate( 'Annota aggiungendo metadati', 'metadata', None, None, None ),
-	'metadatapwd': AppTemplate( 'Annota aggiungendo metadati (con password)', 'metadatapwd', ['/static/checkpwd.js'], None, None ),
+	'metadatapwd': AppTemplate( 'Annota aggiungendo metadati (con password)', 'metadatapwd', [ '/static/checkpwd.js', '/edit/color/load' ], None, None ),
 	'confirm': AppTemplate( 'Conferma', 'confirm', None, None, None ),
 	'edit': AppTemplate( 'Edit', 'edit', [ '/static/codemirror/codemirror.js', '/static/edit.js' ], [ '/static/edit.css' ], None ),
 	'addapp': AppTemplate( 'Aggiungi una applicazione', 'addapp', None, None, None ),
