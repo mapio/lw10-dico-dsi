@@ -125,26 +125,22 @@ def handle_static():
 def handle_tag():
 	if not request_uri_parts: stage = 'upload'
 	else: stage = request_uri_parts.pop( 0 )
-	if stage == 'upload':
-		return html( 'upload' )
-	elif stage == 'uploadpwd':
-		return html('uploadpwd')
-	elif stage  == 'add':
+	if stage == 'upload' or stage == 'upload-pwd':
+		return html( 'upload', action = 'add-pwd' if stage == 'upload-pwd' else 'add' )
+	elif stage  == 'add' or stage  == 'add-pwd':
 		if not post_data[ 'file_field' ].filename: return html( 'upload' )
 		data = post_data[ 'file_field' ].file.read()
 		num = len( kml.placemarks )
 		resources.save_image( num, data )
 		point = kml.extract_lat_lon( data )
 		kml.append( kml.placemark( point ) )
-		return html( 'metadata', num = num, lat = point.lat, lon = point.lon )
-	elif stage  == 'addpwd':
-		if not post_data[ 'file_field' ].filename: return html( 'uploadpwd' )
-		data = post_data[ 'file_field' ].file.read()
-		num = len( kml.placemarks )
-		resources.save_image( num, data )
-		point = kml.extract_lat_lon( data )
-		kml.append( kml.placemark( point ) )
-		return html( 'metadatapwd', num = num, lat = point.lat, lon = point.lon )
+		if stage == 'add-pwd':
+			pwd = '<p><label for="pwd">Password: </label> <input type="text" name="pwd" id="pwd"  id="description" onchange="if ( checkpwd() ) document.getElementById( \'submit\' ).disabled = false;" /></p>'
+			onload = 'onload = "document.body.style.color = color(); document.getElementById( \'submit\' ).disabled = true;"'
+		else:
+			pwd = ''
+			onload = ''
+		return html( 'metadata', num = num, lat = point.lat, lon = point.lon, onload = onload, pwd = pwd )
 	elif stage == 'metadata':
 		data = post_data
 		placemark = kml.placemarks[ int( request_uri_parts[ 0 ] ) ]
@@ -152,14 +148,6 @@ def handle_tag():
 		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
 		placemark.appendChild( kml.description( data[ 'description' ].value ) )
 		return html( 'confirm', placemark = escape( placemark.toprettyxml() ) )
-	elif stage == 'metadatapwd':
-		data = post_data
-		placemark = kml.placemarks[ int( request_uri_parts[ 0 ] ) ]
-		placemark.appendChild( kml.name( data[ 'name' ].value ) )
-		placemark.appendChild( kml.creator( data[ 'creator' ].value ) )
-		placemark.appendChild( kml.description( data[ 'description' ].value ) )
-		return html( 'confirm', placemark = escape( placemark.toprettyxml() ) )
-
 	else:
 		return http( 400, 'Tag application error (this should never happen).' )
 
