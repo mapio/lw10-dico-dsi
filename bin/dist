@@ -1,0 +1,16 @@
+#!/bin/bash
+
+branch=$(hg branch)
+
+if [ "$branch" == "default" ] && [ "$USER" == "santini" ]; then
+
+	rm -f ./dist/*.zip ./dist/*.log
+	./bin/mkzip
+	rsync --delete -zPav ./dist/ mercurio.srv.dsi.unimi.it:www/tmp/lw
+	ssh mercurio.srv.dsi.unimi.it 'chmod -R a+rx www/tmp/lw'
+
+else
+
+	echo "dist: only user santini, from the default branch, can run this command!" >&2
+	
+fi
