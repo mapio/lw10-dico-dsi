@@ -175,7 +175,7 @@ function table( absicssa, ordinates ) {
 
 function draw( data ) {
 	var chart = new google.visualization.LineChart( document.getElementById( 'chart' ) );
-	chart.draw( data, { curveType: "none", width: 400, height: 200 } );
+	chart.draw( data, { curveType: 'none', width: 800, height: 400 } );
 }
 
 /**

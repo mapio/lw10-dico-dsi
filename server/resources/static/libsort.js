@@ -1,16 +1,11 @@
-var millis = 0;
-function tstart() {
-	millis = (new Date).getTime();
-}
-
-function tstop() {
-	return (new Date).getTime() - millis;
+function millisecondi() {
+	return (new Date).getTime();
 }
 
 function a_caso( n, min, max ) {
 	var res = [];
 	if ( min === undefined ) min = 0;
-	if ( max === undefined ) max = n;
+	if ( max === undefined ) max = n * n;
 	for ( var i = 0; i < n; i++ ) res.push( Math.floor( Math.random() * ( max - min ) + min ) );
 	return res;  
 }
