@@ -1,4 +1,2 @@
 ^server/.*\.pyc$
-^dist/(code|data)\.zip
-^dist/.*\.log
-^README.pdf
+^dist$
