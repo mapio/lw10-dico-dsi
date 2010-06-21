@@ -6,5 +6,5 @@ function color() {
 }
 
 function main( input ) {
-	output( color );
+	output( color() );
 }
